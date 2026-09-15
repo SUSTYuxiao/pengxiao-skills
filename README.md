@@ -17,6 +17,7 @@
 | `multi-agent-orchestration` | 0.3.0 | 把既定的多智能体编排范式落到当前工具：lite / runner / reviewer 三角色分工，经济 / 均衡 / 旗舰三级模型分层，主智能体只编排不干活；适用 Qoder / Codex 等支持 Agent 的平台 |
 | `eli5` | 0.1.0 | 把任意主题讲成"给 5 岁小孩听"的极简 HTML 图解（大图、少字） |
 | `docs-notes` | 0.2.1 | 项目文档与调查笔记规范接入器：docs 记当前事实，notes 记因果与证据，按主题检索防重复调查；把自包含 DOCS_NOTES.md 装进目标项目或 skill |
+| `reading-edition` | 0.2.0 | 把技术 Markdown 报告转单文件自包含 HTML 阅读版——受众自适应、结论前置、按需折叠、信息零丢失 |
 
 ## 引入模式
 

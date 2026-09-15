@@ -17,7 +17,8 @@ pengxiao-skills/
 └── skills/                # 全部 skill（唯一产物区）
     ├── multi-agent-orchestration/  # 多智能体编排范式落地（Qoder / Codex 等）
     ├── eli5/                       # 极简 HTML 图解（大图、少字）
-    └── docs-notes/                 # 项目文档与调查笔记规范接入器，自包含 DOCS_NOTES.md
+    ├── docs-notes/                 # 项目文档与调查笔记规范接入器，自包含 DOCS_NOTES.md
+    └── reading-edition/            # 技术 Markdown 报告转单文件自包含 HTML 阅读版（迁自 odps 项目）
 ```
 
 ## 目标运行环境
