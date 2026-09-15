@@ -14,10 +14,13 @@
 
 | Skill | 版本 | 说明 |
 |---|---|---|
-| `multi-agent-orchestration` | 0.3.0 | 把既定的多智能体编排范式落到当前工具：lite / runner / reviewer 三角色分工，经济 / 均衡 / 旗舰三级模型分层，主智能体只编排不干活；适用 Qoder / Codex 等支持 Agent 的平台 |
+| `multi-agent-orchestration` | 0.4.0 | 把既定的多智能体编排范式落到当前工具：lite / runner / reviewer 三角色分工，经济 / 均衡 / 旗舰三级模型分层，主智能体只编排不干活；适用 Qoder / Codex 等支持 Agent 的平台 |
 | `eli5` | 0.1.0 | 把任意主题讲成"给 5 岁小孩听"的极简 HTML 图解（大图、少字） |
 | `docs-notes` | 0.2.1 | 项目文档与调查笔记规范接入器：docs 记当前事实，notes 记因果与证据，按主题检索防重复调查；把自包含 DOCS_NOTES.md 装进目标项目或 skill |
-| `reading-edition` | 0.2.0 | 把技术 Markdown 报告转单文件自包含 HTML 阅读版——受众自适应、结论前置、按需折叠、信息零丢失 |
+| `reader-first` | 0.1.0 | 组织和审阅回复与报告，让读者无需替作者补齐解释；提供全局交付底线的显式检查与安装入口 |
+| `reading-edition` | 0.3.0 | 把技术 Markdown 报告转单文件自包含 HTML 阅读版——受众自适应、结论前置、按需折叠、信息零丢失 |
+
+reader-first 的前置研究结论（问题定义、证据来源与强度、候选发现、方案决策、失效条件）见 [notes/reader-first-research.md](notes/reader-first-research.md)；其评估产物在 `temp/reader-first/`（临时目录，不入分发）。
 
 ## 引入模式
 

@@ -14,12 +14,17 @@ pengxiao-skills/
 ├── pskills/               # 分发 CLI（sync / add / rm / list）
 │   ├── __init__.py
 │   └── cli.py             # 单文件实现，移植自 ytalgo-data-skills ytskills 并简化
+├── notes/                 # 研究笔记（如 reader-first 前置研究：问题定义 / 证据强度 / 决策与失效条件），不入分发
+├── temp/                  # 临时评估产物（如 temp/reader-first/，主会话按需创建），不入分发
 └── skills/                # 全部 skill（唯一产物区）
     ├── multi-agent-orchestration/  # 多智能体编排范式落地（Qoder / Codex 等）
+    ├── reader-first/              # 回复与报告的组织、审阅，以及全局交付底线的显式安装
     ├── eli5/                       # 极简 HTML 图解（大图、少字）
     ├── docs-notes/                 # 项目文档与调查笔记规范接入器，自包含 DOCS_NOTES.md
     └── reading-edition/            # 技术 Markdown 报告转单文件自包含 HTML 阅读版（迁自 odps 项目）
 ```
+
+`notes/` 与 `temp/` 是仓库内研究与评估区，不是分发产物；`pskills` 只识别并分发 `skills/`。调查依据保存在 notes，长期验收标准随 skill 分发，可重建的试验结果放 temp。
 
 ## 目标运行环境
 

@@ -1,7 +1,7 @@
 ---
 name: reading-edition
 description: 把技术 Markdown 报告转成单文件自包含的 HTML 阅读版：受众自适应、结论前置、按需折叠、信息零丢失，md 为唯一事实基线。Use when the user asks to 把报告/文档转成 HTML 阅读版、可视化版本，或同步修订已有 HTML 阅读版。
-version: 0.2.0
+version: 0.3.0
 ---
 
 # reading-edition
