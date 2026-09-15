@@ -4,11 +4,13 @@
 
 ## 一键引入
 
-把下面这段发给你项目里的 agent，它会自动完成安装与引入：
+默认装到**用户级**、跨项目共享。把下面这段发给你任意会话里的 agent，它会自动完成安装与激活：
 
 ```
-帮我用 pskills CLI 引入个人 Agent Skills：先执行 `uv tool install git+ssh://git@github.com/SUSTYuxiao/pengxiao-skills.git` 安装全局命令，再在本项目根目录执行 `pskills sync` 完成首次引入与软链激活（light 拷贝；交互多选要激活的 skill，非交互默认全选；自动识别项目里已有的 .agents / .qoder / .claude 目录，分别激活到各自的 skills/）。若远端尚未推送最新内容导致 clone 失败，改用 `pskills sync --repo /Users/pengxiao/code/pengxiao-skills --branch main` 从本地仓库同步。完成后执行 `pskills list` 汇报引入与激活结果。
+帮我用 pskills CLI 引入个人 Agent Skills：先执行 `uv tool install git+ssh://git@github.com:SUSTYuxiao/pengxiao-skills.git` 安装全局命令，再执行 `pskills sync -g` 完成用户级安装与软链激活（实体在 ~/.pengxiao-skills，激活到 ~/.agents/skills 与 ~/.claude/skills，跨项目共享、不入任何 git；交互多选要激活的 skill，非交互默认全选）。完成后执行 `pskills list -g` 汇报安装与激活结果。若远端 clone 失败或落后于本地，可改用 `--repo <本机已有的仓库克隆路径> --branch main` 临时从本地同步。
 ```
+
+仅当某项目需要锁定独立版本时，才在该项目根目录执行 `pskills sync` 做项目级安装（实体进项目的 `.pengxiao-skills/`，`.version` 记来源 commit）。
 
 ## Skills
 
@@ -26,8 +28,8 @@ reader-first 的前置研究结论（问题定义、证据来源与强度、候�
 
 只有 light 拷贝一种模式（无 subtree 反哺）：
 
-- **项目级**：`pskills sync` —— clone 上游后**拷贝** skill 到项目 `.pengxiao-skills/skills/`（`.version` 记来源 commit）；后续 `sync` 重新拷贝覆盖更新。
-- **全局**：`pskills sync -g` —— 实体放 `~/.pengxiao-skills/`，软链激活到 `~/.agents/skills/` 与 `~/.claude/skills/`，跨项目共享、不入任何 git。
+- **用户级（默认推荐）**：`pskills sync -g` —— 实体放 `~/.pengxiao-skills/`，软链激活到 `~/.agents/skills/` 与 `~/.claude/skills/`，跨项目共享、不入任何 git。
+- **项目级（按需）**：`pskills sync` —— clone 上游后**拷贝** skill 到项目 `.pengxiao-skills/skills/`（`.version` 记来源 commit）；后续 `sync` 重新拷贝覆盖更新。适合为单个项目锁定版本。
 
 软链激活到哪个 agent 目录：项目根有 `.agents/` 时只激活它（Qoder 与 Codex 都从 `.agents/skills/` 读）；没有则自动检测已存在的 `.qoder/` 与 `.claude/` 并对每个建链；都不存在兜底建 `.qoder/skills/`。`--config-dir` 可强制指定单个目录。
 
@@ -35,11 +37,12 @@ reader-first 的前置研究结论（问题定义、证据来源与强度、候�
 
 | 场景 | 命令 | 说明 |
 |---|---|---|
-| 首次安装 CLI | `uv tool install git+ssh://git@github.com/SUSTYuxiao/pengxiao-skills.git` | 装全局 `pskills` 命令（仅首次或手动升级时用） |
-| 后续升级 CLI | `pskills sync` | sync 时自动比对上游版本并重装 CLI 自身（勿用 `uv tool upgrade`，对 git 源锁 commit） |
-| 首次引入 / 更新 | `pskills sync` | 拷贝全部 skill 到 `.pengxiao-skills/` 并激活；交互终端弹多选确认激活集（新 skill 默认不勾） |
+| 首次安装 CLI | `uv tool install git+ssh://git@github.com:SUSTYuxiao/pengxiao-skills.git` | 装全局 `pskills` 命令（仅首次或手动升级时用） |
+| 后续升级 CLI | 任意一次 `pskills sync`（含 `-g`） | sync 时自动比对上游版本并重装 CLI 自身（勿用 `uv tool upgrade`，对 git 源锁 commit） |
+| 安装 / 更新（用户级，默认） | `pskills sync -g` | 实体入 `~/.pengxiao-skills/` 并激活到用户级 agent 目录 |
+| 项目级引入 / 更新 | `pskills sync` | 拷贝全部 skill 到项目 `.pengxiao-skills/` 并激活；交互终端弹多选确认激活集（新 skill 默认不勾） |
 | 列出 skill | `pskills list` | 显示 version、git 更新时间与激活状态 |
 | 激活 | `pskills add <skill>` 或 `pskills add --all` | 建软链（无参交互选择，只增不减） |
 | 取消激活 | `pskills rm <skill>` | 移除软链（不删实体） |
 
-以上项目级命令均支持 `-g` 作用于全局；`--repo` / `--branch` 可临时指定上游（默认本仓 `main` 分支）。
+以上命令默认作用于项目级，`-g` 作用于用户级；`--repo` / `--branch` 可临时指定上游（默认本仓远端 `main` 分支，本机路径不作默认值）。

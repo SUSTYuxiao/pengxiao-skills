@@ -38,7 +38,7 @@ pengxiao-skills/
 
 ## 分发与同步
 
-只有 light 拷贝一种模式，无 subtree 反哺：
+只有 light 拷贝一种模式，无 subtree 反哺。**默认推荐用户级安装**（`pskills sync -g`，跨项目共享）；项目级仅在需为单项目锁定版本时使用：
 
 - `pskills sync`：唯一数据入口。首次 = clone 上游 → 拷贝全部 skill 到 `.pengxiao-skills/skills/` → 选定项建软链（`.version` 写来源 commit）；后续 = 重新拷贝覆盖更新，交互终端弹多选确认激活集（新 skill 默认不勾）
 - `pskills add` / `rm`：增删软链激活（`add` 无参且 tty 进交互多选，只增不减；`rm` 只删软链不删实体）
