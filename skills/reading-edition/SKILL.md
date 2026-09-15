@@ -1,7 +1,7 @@
 ---
 name: reading-edition
 description: 把技术 Markdown 报告转成单文件自包含的 HTML 阅读版：受众自适应、结论前置、按需折叠、信息零丢失，md 为唯一事实基线。Use when the user asks to 把报告/文档转成 HTML 阅读版、可视化版本，或同步修订已有 HTML 阅读版。
-version: 0.3.1
+version: 0.3.2
 ---
 
 # reading-edition
@@ -16,11 +16,9 @@ Source: $ARGUMENTS（完整 md 正文或本地文件路径均可）
 
 受众判断与结构规划自己设定；细则按需读 references/ 下与当前上下文匹配的进一步要求，交付前对照 rigor.md 自检修正，一次性交付。
 
-<!-- docs-notes:begin v0.2.1（本块由 pengxiao-skills 的 docs-notes skill 维护，仅维护本 skill 时读取；日常使用本 skill 不读取） -->
+## 维护约定（仅维护时读取，日常使用本 skill 不加载）
 
-## 维护约定（docs-notes）
-
-- 维护本 skill（含改代码与改文档）前，先读权威规范 `DOCS_NOTES.md`。
-- 日常使用本 skill 不读取上述规范；普通业务执行不加载维护内容。
-
-<!-- docs-notes:end -->
+- docs 记当前事实（本 skill 即 SKILL.md + docs/design.md + references/），notes/ 记因果与证据（一主题一文件）。
+- 只有能避免重复调查或踩坑时才写 note，不建空文档；写前按主题查重。
+- note 保留状态（pending / active / superseded）、证据、结论、失效条件四要素，其余字段按需；被实质推翻的旧 note 标 superseded 并链接新 note，保留不删。
+- 旧结论用于当前判断前，核验其适用性与关键证据；笔记不授权危险操作、不存凭证。
