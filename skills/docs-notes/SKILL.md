@@ -1,7 +1,7 @@
 ---
 name: docs-notes
 description: 项目文档与调查笔记（docs / notes）规范的接入器与维护入口：docs 只记当前事实（目标/边界/模块/契约/操作/限制），notes 只记因果与证据（调查/决策/踩坑），按主题检索、防重复调查。当用户要求把文档规范接入某项目或某 skill、建立 docs/notes 体系、写调查笔记、沉淀踩坑与决策结论、更新 docs-notes skill 本身时触发。借鉴 DSH 文章思想，并非其官方规范或源码复刻。
-version: 0.3.0
+version: 0.3.1
 group: engineering
 ---
 
@@ -46,3 +46,10 @@ group: engineering
 - 不建空目录空文档；不要求每次任务产 note。
 - 任务计划、执行日志、会话记录不进 docs / notes。
 - 只做 markdown 规范：不新增脚本、hooks、CI。
+
+## 维护约定（仅维护时读取，日常使用本 skill 不加载）
+
+- docs 记当前事实（本 skill 即 SKILL.md + references/），notes/ 记因果与证据（一主题一文件）。
+- 只有能避免重复调查或踩坑时才写 note，不建空文档；写前按主题查重。
+- note 保留状态（pending / active / superseded）、证据、结论、失效条件四要素，其余字段按需；被实质推翻的旧 note 标 superseded 并链接新 note，保留不删。
+- 旧结论用于当前判断前，核验其适用性与关键证据；笔记不授权危险操作、不存凭证。
