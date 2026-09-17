@@ -21,7 +21,8 @@ pengxiao-skills/
     ├── reader-first/              # 回复与报告的组织、审阅，以及全局交付底线的显式安装
     ├── eli5/                       # 极简 HTML 图解（大图、少字）
     ├── docs-notes/                 # 项目文档与调查笔记规范接入器，自包含 DOCS_NOTES.md
-    └── reading-edition/            # 技术 Markdown 报告转单文件自包含 HTML 阅读版（迁自 odps 项目）
+    ├── reading-edition/            # 技术 Markdown 报告转单文件自包含 HTML 阅读版（迁自 odps 项目）
+    └── personal-memory/            # 用户个人记忆库接入（读规范 / 接入 / 导出 / 整理上浮），数据根固定 ~/.personal-memory
 ```
 
 `notes/` 与 `temp/` 是仓库内研究与评估区，不是分发产物；`pskills` 只识别并分发 `skills/`。调查依据保存在 notes，长期验收标准随 skill 分发，可重建的试验结果放 temp。
