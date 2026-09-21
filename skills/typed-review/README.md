@@ -4,6 +4,8 @@
 
 ## 快速使用
 
+以下命令从本仓库根执行；复制到其他项目后改为实际 runner 与 YAML 路径。
+
 ```bash
 # 只展示将执行的输入与规则，不发送网络请求
 uv run skills/typed-review/references/runner.py \
@@ -29,7 +31,13 @@ uv run skills/typed-review/references/runner.py \
 
 ## 阈值校准
 
-`reader-first.yaml` 里的 `noul >= 0.70` 与 `0.55–0.70` uncertain 只是保守起始档，不是校准结论。mock 样例适合验证链路和状态机；要调整阈值，应保存真实正反例和人工结论，重放不同阈值后比较误报、漏报与 uncertain 占比。升级为 blocker 前，建议正反例各有 20 个以上。
+`reader-first.yaml` 是五条底线的候选问题示例，不等于完整验收；默认全部为 `warning`。当前示例 `<0.55` 为 pass，`0.55–0.70`（含两端）为 uncertain，`>0.70` 为 flag。虽然 flag 条件写了 `>=0.70`，runner 会先判 uncertain，故边界 0.70 不算 flag。
+
+这些数值只是未校准的起点。mock 验证程序，合成正反例检查规则方向，带人工结论的真实样本才用于效果评估。比较误报、漏报与不确定比例，并用未参与调参的样本验证；不把固定样本数当作可靠性保证。当前没有自动调参工具，样本标签与规则版本需要额外留存。
+
+## 使用成熟度
+
+当前版本用于辅助审阅，不作为无人值守发布门禁。长文可能受服务端输入长度限制；未确认覆盖范围时不能把 pass 解释为全文通过。runner 不自动分段、检测截断或校准阈值；Markdown 顶层错误渲染仍有已知限制，错误诊断优先使用 JSON。
 
 ## 退出码
 
@@ -39,6 +47,8 @@ uv run skills/typed-review/references/runner.py \
 | 1 | 存在 flag 或 uncertain，需要人工处理 |
 | 2 | 配置、输入或执行错误 |
 | 3 | dry-run，请求未发送 |
+
+`severity` 不影响退出码：全是 warning 的检查仍可能返回 1。不要把退出码 1 直接作为发布阻断条件。
 
 ## 产物形态
 

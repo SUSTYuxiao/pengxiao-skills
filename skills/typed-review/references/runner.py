@@ -432,6 +432,20 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def normalize_base_url(value: str) -> str:
+    # 兼容复制的完整接口地址，避免 SDK 重复追加路由。
+    from urllib.parse import urlsplit, urlunsplit
+
+    parts = urlsplit(value.strip())
+    if parts.scheme not in {"http", "https"} or not parts.netloc or parts.query or parts.fragment:
+        raise ConfigError("base_url 必须是无查询参数或片段的 HTTP(S) 地址")
+    path = parts.path.rstrip("/")
+    suffix = "/v1/systemone"
+    if path.endswith(suffix):
+        path = path[:-len(suffix)]
+    return urlunsplit((parts.scheme, parts.netloc, path, "", ""))
+
+
 def main() -> int:
     args = parse_args()
     started_at = datetime.now(timezone.utc).isoformat()
@@ -455,6 +469,7 @@ def main() -> int:
             api_key = args.api_key or os.environ.get(runtime.api_key_env) or "local-no-auth"
             if not base_url:
                 raise ConfigError(f"缺少 base_url：请设置 {runtime.base_url_env} 或使用 --base-url")
+            base_url = normalize_base_url(base_url)
             results = await_or_run(send_checks(checks, states, runtime, base_url, api_key))
             status, summary = summarize(results, sent=True)
             actual_models = sorted({item.get("model") for item in results if item.get("model")})
