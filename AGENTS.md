@@ -22,6 +22,7 @@ pengxiao-skills/
     ├── eli5/                       # 极简 HTML 图解（大图、少字）
     ├── docs-notes/                 # 项目文档与调查笔记规范接入器，自包含 DOCS_NOTES.md
     ├── reading-edition/            # 技术 Markdown 报告转单文件自包含 HTML 阅读版（迁自 odps 项目）
+    ├── typed-review/               # 自定义审核 YAML + TypeSafe/JEV 并发检查 runner
     └── personal-memory/            # 用户个人记忆库接入（读规范 / 接入 / 导出 / 整理上浮），数据根固定 ~/.personal-memory
 ```
 

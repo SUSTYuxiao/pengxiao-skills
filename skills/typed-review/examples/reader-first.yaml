@@ -1,0 +1,98 @@
+config_version: 1
+
+state_prefix: |
+  审核对象是一篇面向未参与调查读者的技术文章或报告。请只根据材料本身判断，
+  不使用外部知识补证。读者需要知道对象、范围、证据、结论和未覆盖项。
+
+runtime:
+  base_url_env: JEV_BASE_URL
+  api_key_env: JEV_API_KEY
+  model: jev-latest
+  timeout_seconds: 20
+  concurrency: 4
+
+inputs:
+  report:
+    path: docs/report.md
+    max_bytes: 200000
+
+checks:
+  - id: reader_context_missing
+    input: report
+    severity: blocker
+    message: 开头没有让未参与调查的读者识别对象、材料和行动价值。
+    question:
+      type: noul
+      instructions: "The introduction omits necessary context for a reader who did not participate in the investigation: what object is being reviewed, what evidence exists, and why the result matters."
+    flag_when:
+      metric: noul
+      operator: ">="
+      value: 0.70
+    uncertain_when:
+      metric: noul
+      gte: 0.55
+      lte: 0.70
+
+  - id: fact_without_evidence
+    input: report
+    severity: blocker
+    message: 存在可度量事实或关键结论，但材料没有给出可追溯证据。
+    question:
+      type: noul
+      instructions: "The text states a measurable factual claim or important conclusion without showing a source, command, data point, returned result, or concrete example that supports it."
+    flag_when:
+      metric: noul
+      operator: ">="
+      value: 0.70
+    uncertain_when:
+      metric: noul
+      gte: 0.55
+      lte: 0.70
+
+  - id: conclusion_exceeds_scope
+    input: report
+    severity: blocker
+    message: 结论范围超过材料覆盖范围，缺少局部样本或运行条件限定。
+    question:
+      type: noul
+      instructions: "A conclusion is stated as broadly applicable or fully established, while the supplied evidence only covers a limited sample, one environment, or a restricted scenario."
+    flag_when:
+      metric: noul
+      operator: ">="
+      value: 0.70
+    uncertain_when:
+      metric: noul
+      gte: 0.55
+      lte: 0.70
+
+  - id: unexplained_reader_term
+    input: report
+    severity: warning
+    message: 专业名词首次出现时没有给读者足够的一句解释。
+    question:
+      type: noul
+      instructions: "A specialized term, field, or internal identifier is first used without a concise explanation suitable for the intended reader."
+    flag_when:
+      metric: noul
+      operator: ">="
+      value: 0.70
+    uncertain_when:
+      metric: noul
+      gte: 0.55
+      lte: 0.70
+
+  - id: article_structure_alignment
+    input: report
+    severity: warning
+    message: 结构没有围绕开头承诺的读者问题推进。
+    question:
+      type: noul
+      instructions: "The body structure does not follow the question or task promised in the introduction, making the reader reconstruct the author's investigation order."
+    flag_when:
+      metric: noul
+      operator: ">="
+      value: 0.70
+    uncertain_when:
+      metric: noul
+      gte: 0.55
+      lte: 0.70
