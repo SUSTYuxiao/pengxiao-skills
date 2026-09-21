@@ -1,7 +1,7 @@
 ---
 name: typed-review
 description: 把用户的代码、文章或报告审核要求转成可复用的 YAML 检查规则，交付 uv 可运行的 Python runner，并通过 TypeSafe/JEV 兼容端点并发执行、用样本校准判定阈值。用于建立自定义审核工作流、执行已有检查配置或调整误报漏报；不是编译器静态分析，也不替代人工 review。
-version: 0.2.0
+version: 0.2.1
 ---
 
 # typed-review：把审核要求变成可重复执行的检查
@@ -73,4 +73,4 @@ runner 每条规则发一个请求，用有上限的并发执行。它没有自�
 - `error` 是执行失败，`not_sent` 是未执行；都不能写成通过。报告检查范围、实际模型、有效结果和未覆盖项，不只报一个“通过率”。
 - 退出码 `0/1/2/3` 分别表示全 pass、有 flag 或 uncertain、有错误、未发送。`warning/blocker` 目前只是结果标签，不改变退出码；不能把退出码 1 自动解释成应禁止发布。
 
-reader-first 在配置了端点且本 runner 可用时默认调用本工具，使用它自带的 `references/rule.md`；否则降级传统审阅。它的写作规则、安装行为和最终裁决不依赖本工具。只有用户要求改写时才修改原文，不自动部署 hooks、CI 或发布门槛。
+reader-first 默认不调用本工具；只有用户明确接入机器审核 hook 后，才由该 hook 使用 reader-first 自带的 `references/rule.md` 调用 runner。配置环境变量或安装 AGENTS 写作规则均不代表启用。用户直接要求 typed-review 执行一次检查仍按本 skill 的执行流程处理，不因此创建持久 hook。它的写作规则、安装行为和最终裁决不依赖本工具。只有用户要求改写时才修改原文，不自动部署 hooks、CI 或发布门槛。

@@ -1,7 +1,7 @@
 ---
 name: reader-first
 description: 面向未参与调查的读者，撰写、组织或审阅最终回复与报告：按用户问题组织、证据讲清支撑关系、结论不超出材料、详略服务理解与决策。当用户要求依据材料撰写报告、整理、改写、审阅回复或报告，或投诉内容太乱、读不懂、像内部笔记时使用；把规则安装或检查进目标 AGENTS 仅在用户明确要求时进行。不去 AI 味、不牺牲技术准确性、不代替业务验证、不做 HTML 转换。
-version: 0.2.0
+version: 0.2.1
 ---
 
 # reader-first：写给没参与调查的读者
@@ -50,29 +50,16 @@ version: 0.2.0
 - 产物承载遵循宿主源文约束：源文是唯一事实基线时不改基线、不删证据；复核资料可放附录，折叠不代替正文组织。
 - 无变更即 no-op：如实说明，不产出"改写版"。
 
-## 审阅与收尾：默认探查模型端点
+## 机器辅助审阅（仅用户明确接入 hook 时）
 
-每次审阅或成文后的收尾，优先使用用户在本次任务明确指定的端点（通过本次进程的 `JEV_BASE_URL` 或 `--base-url` 传入）；否则检查当前进程的 `JEV_BASE_URL`，为空再看 `TYPESAFE_BASE_URL`。只有用户未指定且环境也没有端点时才降级；只读取相关变量，不打印密钥、不加载 `.env` 或修改 shell 配置。用户明确要求离线时跳过探查和调用。
+默认按五条底线完成传统审阅，不探查模型端点、不调用 Python runner。只有用户明确要求接入机器审核 hook（指定审核触发点与作用范围）时，才由该 hook 调用 typed-review；安装 reader-first 或配置了环境变量都不等于启用。hook 的位置、输入、触发方式与失败处理需按用户指定的平台单独落实，本 skill 不自动创建或注册 hook。
 
-- **未配置端点**：直接按五条底线完成传统审阅，不询问是否安装、配置或启用 TypeSafe，也不为探测而请求默认地址。
-- **已配置端点**：默认使用现成的 `references/rule.md`，通过可用的 typed-review Python runner 实际执行，无需再次询问是否启用。先从当前可用 skills 定位 `typed-review/references/runner.py`（同一 skills 根目录下可直接定位），不硬编码用户机器路径、不自动安装。runner 或 uv 不可用、配置错误、请求失败时回到传统审阅；若已尝试执行，简短说明本次机器检查未完成，不把失败记作通过。
+启用后的约定：
 
-`references/rule.md` 是已经生成的 **纯 YAML 配置**，`.md` 只是文件名；不要添加 Markdown 标题或代码围栏。默认复用，不在每次审阅时重新生成。运行时按读者、材料和真实复核结果迭代问题及阈值，可在任务临时副本中修改；不要为了让本次文章通过而调阈值，也不要未经要求覆盖已安装 skill 的规则。需要长期保留调整时写到用户指定的项目位置。
-
-执行方式（变量均替换为实际绝对路径）：
-
-```bash
-# 用户已指定地址时，先在本次进程设置 JEV_BASE_URL；否则沿用已有环境
-ENDPOINT="${JEV_BASE_URL:-${TYPESAFE_BASE_URL:-}}"
-uv run "$TYPED_REVIEW_DIR/references/runner.py" "$READER_FIRST_DIR/references/rule.md" \
-  --input "report=$REPORT_PATH" --base-url "$ENDPOINT" --send --format json
-```
-
-只在端点非空且工具可用时执行。推荐传服务根地址；复制的完整 `/v1/systemone` 地址由 runner 归一化，避免重复拼接。用户指定地址不代表授权修改全局环境变量。审核会话中的成文而非现成文件时，可准备任务临时输入，不修改原稿。认证沿用规则声明的 `JEV_API_KEY`；若环境仅配置 `TYPESAFE_API_KEY`，在本次子进程内映射到 `JEV_API_KEY`，不输出或持久化密钥。需要认证的服务不能把占位密钥当真实凭证。
-
-长文必须额外确认模型输入覆盖范围。存在截断迹象或覆盖未确认时，标明“机器输入覆盖未确认”，不宣称全文通过，继续完整的传统审阅；分段检查也不能替代跨章节结构与证据关系核对。
-
-机器结果补充传统审阅，不替代它：`flag` 和 `uncertain` 都回到原文核对，`pass` 只表示未命中当前问题。五条底线不限定为五个问题；首版阈值未校准，仅作 warning。规则安装到 AGENTS 时仍只复制无工具依赖的可安装块，不安装 hooks 或 CI。
+- 复用 `references/rule.md`（内容为纯 YAML），通过 typed-review runner 执行。端点优先采用用户指定值，否则取 `JEV_BASE_URL`、`TYPESAFE_BASE_URL`；未配置或工具不可用时继续传统审阅，不把未执行记为通过。
+- 规则可在任务副本中迭代，不自动覆盖已安装版本；阈值未校准前只作 warning。环境变量提供连接配置，不构成执行授权。
+- `flag` 和 `uncertain` 均回到原文核对；`pass` 不表示事实正确。长文输入覆盖未确认时不得宣称全文通过，仍需完整传统审阅。
+- hook 接入与下文的 AGENTS 规则安装是两件独立的事，不把调用命令、端点探查、hook 配置或 runner 依赖混进可安装块。
 
 ## 安装（仅明确请求时）
 
@@ -83,4 +70,4 @@ uv run "$TYPED_REVIEW_DIR/references/runner.py" "$READER_FIRST_DIR/references/ru
 - `references/global-rules.md`：可安装块（统领句 + 五条底线）与安全安装说明（安装时读）
 - `references/examples.md`：虚构 / 改编的前后对照示例（校准尺度时读；示例非唯一标准答案）
 - `references/acceptance.md`：现实测试提示与验收标准（验收本 skill 行为时读）
-- `references/rule.md`：端点可用时默认执行的纯 YAML 审阅规则，可在任务副本中迭代
+- `references/rule.md`：显式接入机器审核 hook 后可使用的纯 YAML 规则，可在任务副本中迭代
