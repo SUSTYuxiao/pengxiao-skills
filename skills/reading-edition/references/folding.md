@@ -21,7 +21,7 @@
 
 ## 实现
 
-- 原生 `<details class="fold">` + `<summary>`，零 JS。
+- 原生 `<details class="fold">` + `<summary>`；折叠交互零 JS，不因图表脚本例外而改变。
 - summary 文案 = 内容名 + 规模预告（例：「E2 原始消息取证 · 4 条可复现 SQL」），让读者在折叠态就能决定是否展开。
 - 默认收起不加属性；例外项加 `open`。
 - 案例实测：16 处 details（1 open / 15 收起），折叠态正文高度约为全展开的一半以下。

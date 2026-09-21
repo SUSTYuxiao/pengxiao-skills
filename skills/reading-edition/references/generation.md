@@ -27,13 +27,15 @@
 
 ## 单文件技术约束
 
-- 内联：唯一 `<style>` 块 + 内联 SVG；禁止 `<script>`、禁止任何外部 `href`/`src`。
+- 内联：唯一 `<style>` 块 + 内联 SVG；默认零 `<script>`、禁止任何外部 `href`/`src`。
+- Tailwind 只允许编译后的 CSS 内联；轻量图表脚本与占比条选择见 [visualization.md](visualization.md)，不得引入外部图表库或 CDN。
 - 语义色克制：状态语义只用绿/红两色，其余用中性色。
 - 字体只用系统字体栈，不引外部字体（自包含优先于字体个性）。
 - 实测参照：案例终版 640 行，16 处 `<details>`、3 处内联 style/SVG 块、零外部引用。
 
-## 管道图与折叠实现要点
+## 管道图与可视化要点
 
 - 管道/链路图：优先用 `<pre>` 文本管道图（转换自 md 代码块，零成本保真）；确需 SVG 时手写内联 SVG，不引库。
+- 分布 / 归因桶 / 豁免阶梯的默认表达与 Tailwind、轻量图表边界见 [visualization.md](visualization.md)。
 - 折叠用原生 `<details class="fold">/<summary>`，不写 JS 展开逻辑。
 - summary 标题写清「里面是什么 + 规模预告」（如「E2 原始消息取证 · 4 条可复现 SQL」）。

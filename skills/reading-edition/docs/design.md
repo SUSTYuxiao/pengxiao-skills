@@ -17,7 +17,7 @@
 ## references/ 组织
 
 - 每文件单一场景，文件头一行「适用场景」，让模型按需加载而不是全量读取。
-- 当前分工：generation（生成阶段）／rigor（交付前自检）／wording（措辞客观化）／folding（按需披露）／publishing（语雀发布）／case-20260826（案例档案）。
+- 当前分工：generation（生成阶段）／visualization（图形与前端技术分层）／rigor（交付前自检）／wording（措辞客观化）／folding（按需披露）／publishing（语雀发布）／case-20260826（案例档案）。
 
 ## 案例档案是防漂移锚点
 
