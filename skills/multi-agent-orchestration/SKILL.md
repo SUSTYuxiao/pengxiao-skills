@@ -1,8 +1,7 @@
 ---
 name: multi-agent-orchestration
-description: 将团队既定的多智能体编排范式应用到当前工具：lite、runner、reviewer 三角色分工，经济、均衡、旗舰三级模型分层，主智能体只编排不干活。用于配置子智能体、追加 AGENTS.md 编排规则、优化额度消耗，适用于 Qoder、Codex 等支持 Agent 的平台。
-version: 0.4.0
-group: engineering
+description: 将团队既定的多智能体编排范式应用到当前工具：检查升级兼容性，配置 lite、runner、reviewer 三角色分工与经济、均衡、旗舰模型分层，维护 AGENTS.md 编排规则并优化额度消耗。适用于 Qoder、Codex 等支持 Agent 的平台。
+version: 0.5.0
 allowed-tools:
   - Read
   - Write
@@ -24,24 +23,32 @@ metadata:
 1. **主智能体只编排**：拆解、派发、裁决冲突、必要验证、最终汇总。不自行做大范围检索和常规实施。
 2. **最终交付是主智能体的责任**：内部交接只用于判断与复核；面向用户的最终答复按问题重组、补足读者需要的背景、保留结论范围，不直接拼接子智能体交接文本——不要让读者替作者完成解释工作。更完整的交付语言规则不在本 skill 内展开。
 3. **三角色分工**：
-   - `lite`（经济模型，参考 `qwen3.8-flash`）：精确检索、状态查询、无副作用命令。不写文件。
-   - `runner`（均衡模型，参考 `glm-5.3`，思考等级 medium）：边界与验收明确的实现和验证。唯一默认实施者。
-   - `reviewer`（旗舰模型，参考 `cantus`）：重大架构、疑难根因、高风险变更的只读审查。
+   - `lite`（经济档）：精确检索、状态查询、无副作用命令。不写文件。
+   - `runner`（均衡档）：边界与验收明确的实现和验证。唯一默认实施者。
+   - `reviewer`（旗舰档）：重大架构、疑难根因、高风险变更的只读审查。
 4. **主会话用最强可用模型**，承担编排与最终答复。
 5. **只并行无依赖、无共享写入的任务**；子智能体不递归派发。
 
-模型名是团队当前映射，按宿主实际可用的经济/均衡/旗舰档替换即可，不因名称缺失而中断。
+具体模型与思考档位以宿主的持久角色配置为单一真相源；本 Skill 只定义层级与职责，不重复维护模型名。宿主没有持久角色配置时，再按实际可用模型映射三档。
+
+## 工作模式
+
+- 用户只是咨询现状、比较方案或询问升级后是否要改时，进入**只读检查**：核对宿主能力、官方文档、角色配置与运行时探针，不修改配置或持久指令。
+- 用户明确要求安装、配置或更新时，才进入**落地实施**；写入范围限于已授权的角色配置和持久指令，不自动扩展到安装副本、共享环境、发布或外部动作。
 
 ## 应用步骤
 
-1. 读 [role-and-model-playbook.md](references/role-and-model-playbook.md)，在宿主的原生 Agent 机制中创建或更新三角色定义（名称、职责描述、工具白名单、模型、轮次上限）。已存在同名定义时先展示差异、经确认再覆盖。
-2. 读 [agents-md-orchestration-rules.md](references/agents-md-orchestration-rules.md)，将编排规则块追加到用户或项目的 AGENTS.md（或宿主等价的持久指令文件）。该块是通用规则，不含任何项目具体信息。
-3. 最小验证：给每个角色派一个探针任务（如 lite 查一个文件是否存在、runner 复述其写入边界、reviewer 复述其只读约束），确认三角色可被调用、模型按预期解析、约束生效。注意：多数宿主只在会话启动时加载 Agent 定义，会话中途新建的角色报 unknown agent 属正常现象，新开会话再验证，不要误判为配置错误。
+1. 先选择工作模式；只读检查可以继续完成比较和探针，但不得进入写入步骤，也不把“发现差异”解释成修改授权。
+2. 读 [role-and-model-playbook.md](references/role-and-model-playbook.md)，核对宿主的原生 Agent 机制和三角色定义：名称、职责、模型与思考档位、权限与工具边界、轮次约定。落地实施时，已存在同名定义先展示差异，经确认后再覆盖。
+   Codex 的个人角色放 `~/.codex/agents/<name>.toml`，项目角色放 `.codex/agents/<name>.toml`；模型与档位使用 `model` / `model_reasoning_effort`，只读角色使用 `sandbox_mode = "read-only"`。在角色文件的 `[agents]` 表下设置 `enabled = false` 会关闭该子会话的多智能体工具，可用于阻止递归派发，并不表示该角色不能被父会话调用。
+3. 需要核对或落地持久编排规则时，读 [agents-md-orchestration-rules.md](references/agents-md-orchestration-rules.md)；只有落地实施且用户授权写入持久指令时，才将规则块合并到用户或项目的 AGENTS.md（或宿主等价文件），避免重复追加。
+4. 最小验证要检查可观察事实：角色能否调用、模型与思考档位能否解析、实际沙箱和可见工具是否符合边界、子智能体是否无法递归派发。角色复述约束只能证明理解了提示，不能证明权限隔离。配置未生效时先按宿主加载机制重试；确认存在缓存后再新开会话验证，单次 `unknown agent` 不足以判定宿主缺失能力。
 
-仅当步骤 1 中找不到原生 Agent 机制、创建失败，或确认宿主缺失持久 Agent / 模型路由 / 并行能力时，才降级：无持久 Agent 则把角色定义写进 AGENTS.md 规则块随任务生效；无模型路由则沿用默认模型并靠范围/轮次控制成本；无并行则按 `lite → runner → reviewer` 串行。降级细节见 [platform-capability-adaptation.md](references/platform-capability-adaptation.md)。
+仅当确认宿主缺失持久 Agent、模型路由、权限隔离或并行能力时才降级。无并行能力只把原本需要并行的角色任务按依赖顺序执行，不额外引入角色；`reviewer` 仍只在风险达到条件时使用。降级细节见 [platform-capability-adaptation.md](references/platform-capability-adaptation.md)。
 
 ## 不变规则
 
 - `reviewer` 永远只读；`runner` 不擅自扩大范围；`lite` 不做设计判断。
 - 三角色任务互不重叠，交接格式见 playbook「标准交接」。
+- 角色提示只能约束行为，不能替代宿主的沙箱、工具或权限隔离；缺少强制隔离时必须明确标注。
 - 一切配置修改遵守宿主权限策略，且不动无关设置。
