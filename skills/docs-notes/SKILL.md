@@ -1,6 +1,6 @@
 ---
 name: docs-notes
-description: 项目文档与调查笔记（docs / spec / notes / lessons）规范的接入器与维护入口：作用域内固定 docs 记当前事实、spec 记可验证契约、notes 记证据与根因，lessons 按需；AGENTS.md 作文档路由入口，开工按任务类型路由、变更触发维护、结束验证链接。当用户要求把规范接入某项目或某 skill、建立三目录体系、迁移已有 Trellis/ADR 布局、写调查笔记或维护 docs-notes skill 本身时触发。借鉴 DSH 文章思想，并非其官方规范或源码复刻。
+description: 项目文档与调查笔记（docs / spec / notes / lessons）规范的接入器与维护入口：作用域内固定 docs 记当前事实、spec 记可验证契约、notes 记证据与根因，lessons 按需；AGENTS.md 作文档路由入口，开工按任务类型路由、变更触发维护、结束验证链接。当用户要求把规范接入某项目或某 skill、建立三目录体系、迁移已有 Trellis/ADR 布局、写调查笔记、整理文档、周期整理、自动整理或维护 docs-notes skill 本身时触发。借鉴 DSH 文章思想，并非其官方规范或源码复刻。
 version: 0.4.1
 group: engineering
 ---
@@ -22,6 +22,7 @@ group: engineering
 | 写或改 `spec/` | `references/spec.md` |
 | 写或改 `notes/` | `references/notes.md` |
 | 写或改 lessons | `references/lessons.md` |
+| 整理文档 / 周期整理 / 自动整理 | `references/maintenance.md` + 本文件；目标作用域只读入口与核心 `DOCS_NOTES.md`，按需再读 `notes.md`、`lessons.md`、`docs.md`、`spec.md`，不通读全库 |
 | 迁移已有 docs / spec / ADR 布局 | `references/DOCS_NOTES.md` + 相关写作 ref |
 | 退出 Trellis（仅此时） | `references/trellis-migration.md` |
 | 只改本规范自身 | 本文件 + 相关 ref；不自动接入全源仓 |
@@ -36,7 +37,7 @@ group: engineering
 
 ## 维护
 
-仅在源仓库维护本 skill，已接入目标不自动跟进。改行为级内容时递增 `SKILL.md` 版本，并同步 `README.md` 与根 `AGENTS.md` 的简介行；模板块标记版本随块内容递增。详细合并 / 升级规则见 `references/agents-reference.md`。
+仅在源仓库维护本 skill，已接入目标不自动跟进。周期整理是一次显式调用的一次有界 pass，不是后台能力；它只在目标范围与写授权内运行，不自行建 scheduler、hooks、CI、提交或推送。详细流程见 `references/maintenance.md`。改行为级内容时递增 `SKILL.md` 版本，并同步 `README.md` 与根 `AGENTS.md` 的简介行；模板块标记版本随块内容递增。详细合并 / 升级规则见 `references/agents-reference.md`。
 
 ## 红线
 
