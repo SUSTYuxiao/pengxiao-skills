@@ -8,3 +8,4 @@
 - [note-skill接入完整结构与更新所有权.md](./note-skill接入完整结构与更新所有权.md)：v0.4.0 起 skill 接入三目录同构、更新单通道自理；v0.4.1 拆四写作 ref、强化宿主发现边界。
 - [note-trellis技能移除标准.md](./note-trellis技能移除标准.md)：先归档出活跃扫描，再彻底退役；不靠 AGENTS 软关闭。
 - [note-magpie-lessons设计依据.md](./note-magpie-lessons设计依据.md)：lessons 按重复独立案例升规、升后留短指针的参考依据。
+- [note-主路由收窄为接入整理与维护.md](./note-主路由收窄为接入整理与维护.md)：v0.4.1 主路由只留接入/更新、显式整理与维护自身；四份写作 ref 降为专项，日常写作由目标自带规范承载。
