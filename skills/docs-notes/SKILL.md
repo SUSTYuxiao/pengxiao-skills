@@ -1,7 +1,7 @@
 ---
 name: docs-notes
 description: 项目知识规范接入与整理：把自包含的 docs（当前事实）/ spec（可验证契约）/ notes（证据与根因）/ lessons（按需）规范接入普通项目、指定子目录或其他 skill，并支持更新已接入副本、显式整理（含必要的既有布局迁移）与维护本 skill 自身。目标项目日常写作只依赖其自带的 DOCS_NOTES.md 与 AGENTS.md，不回读本 skill。当用户要求接入或更新文档规范、显式整理文档与调查笔记、迁移已有 docs/spec/ADR 布局，或维护 docs-notes skill 本身时触发。
-version: 0.4.1
+version: 0.4.2
 group: engineering
 ---
 
@@ -28,7 +28,7 @@ group: engineering
 1. **定作用域**：与用户确认项目根或明确子目录；解析软链到真实路径，分发安装副本不能作写入目标。目标明确时不重问，已有布局先清点。
 2. **装核心**：把 `references/DOCS_NOTES.md` 复制到作用域根。普通项目可选托管块；其他 skill 的自有副本必须删除托管标记、顶部“托管说明……”整段注释、版本与分发源指针。
 3. **写路由**：按 `references/agents-reference.md` 的短模板并入作用域 `AGENTS.md`；保留块外内容与本地修改，重复接入原位三方合并，不追加第二块；无变更 no-op。
-4. **建三目录**：`docs/ spec/ notes/` 必备，入口默认小写 `index.md`，已有入口沿用；lessons 按需，不默认建 `lessons/` 目录。
+4. **建三目录**：`docs/ spec/ notes/` 必备，入口默认小写 `index.md`，已有入口沿用；lessons 按核心规范判定后接入，不默认建 `lessons/` 目录。
 5. **验收入口**：链接、路径、失效条件一致；无机器绝对路径、无未替换待填项；子目录作用域只约束其内，父层 `AGENTS.md` 仍适用。
 6. **接入补齐（按需）**：目标某层已有内容需要按写法细化时，只按需读对应写作 ref（`docs.md` / `spec.md` / `notes.md` / `lessons.md`），不改目标的日常运行依赖。
 
