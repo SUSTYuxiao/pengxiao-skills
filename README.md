@@ -18,7 +18,7 @@
 |---|---|---|
 | `multi-agent-orchestration` | 0.4.0 | 把既定的多智能体编排范式落到当前工具：lite / runner / reviewer 三角色分工，经济 / 均衡 / 旗舰三级模型分层，主智能体只编排不干活；适用 Qoder / Codex 等支持 Agent 的平台 |
 | `eli5` | 0.1.0 | 把任意主题讲成"给 5 岁小孩听"的极简 HTML 图解（大图、少字） |
-| `docs-notes` | 0.3.2 | 项目文档与调查笔记规范接入器：docs 记当前事实，notes 记因果与证据，按主题检索防重复调查；把自包含 DOCS_NOTES.md 装进目标项目，或把自维护约定并入其他 skill（自身设计决策见其 notes/） |
+| `docs-notes` | 0.4.1 | 项目文档与调查笔记规范接入器：作用域内固定 docs 记当前事实、spec 记可验证契约、notes 记证据与根因，lessons 按需；AGENTS.md 作文档路由入口，开工按任务类型路由、变更触发维护、结束验证链接；自包含 DOCS_NOTES.md，四份写作 ref 留源 skill 不复制到目标，其他 skill 建无托管同结构自有副本（SKILL 维护节只链接 AGENTS；宿主发现范围需按平台核验；Trellis 保留 spec 与业务历史、删除活跃工具；自身设计决策见其 notes/） |
 | `reader-first` | 0.2.1 | 组织和审阅回复与报告，让读者无需替作者补齐解释；提供全局交付底线的显式检查与安装入口 |
 | `typed-review` | 0.2.1 | 把代码、文章或报告的自定义审核要求固化为 YAML，并通过 uv 驱动的 TypeSafe/JEV runner 并发输出结构化检查结果 |
 | `reading-edition` | 0.3.3 | 把技术 Markdown 报告转单文件自包含 HTML 阅读版——受众自适应、结论前置、按需折叠、信息零丢失；分布优先纯 CSS 占比条，Tailwind 仅内联编译产物，轻量图表脚本需严格视觉验收 |
