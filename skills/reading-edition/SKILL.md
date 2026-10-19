@@ -1,7 +1,7 @@
 ---
 name: reading-edition
 description: 把技术 Markdown 报告转成单文件自包含的 HTML 阅读版：受众自适应、结论前置、按需折叠、信息零丢失，md 为唯一事实基线。Use when the user asks to 把报告/文档转成 HTML 阅读版、可视化版本，或同步修订已有 HTML 阅读版。
-version: 0.3.3
+version: 0.3.5
 ---
 
 # reading-edition
@@ -10,7 +10,7 @@ version: 0.3.3
 
 Source: $ARGUMENTS（完整 md 正文或本地文件路径均可）
 
-本质要求：受众自适应、结论前置、按需折叠、信息零丢失、单文件自包含、措辞客观、md 是唯一事实基线。
+本质要求：受众自适应、结论前置、按需折叠、信息零丢失、单文件自包含、措辞客观、md 是唯一事实基线。默认阅读路径应足以理解主要内容。
 
 产物落源 md 同目录、同名 .html（如 docs/report/x.md → docs/report/x.html），是面向用户的交付物，不使用 runtime 目录。
 
