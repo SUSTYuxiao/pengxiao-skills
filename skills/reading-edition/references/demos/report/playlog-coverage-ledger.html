@@ -1,0 +1,1215 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="data:,">
+<title>v2/v3 播放日志覆盖差异 · 终版报告 · 技术台账</title>
+<style>
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--ground);color:var(--body);font:16.5px/1.82 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img{max-width:100%}
+.wrap{width:min(1240px,calc(100% - 64px));margin-inline:auto}
+.nw,.num{white-space:nowrap}
+.num{font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{text-wrap:balance}
+p,li,td,th,dd{text-wrap:pretty}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:16px;top:12px;background:#fff;padding:8px 12px;z-index:50}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+main h2{scroll-margin-top:20px}
+main h3{scroll-margin-top:20px}
+main h2{font:700 clamp(22px,2.2vw,30px)/1.36 var(--display);letter-spacing:-.012em;color:var(--ink);margin:0 0 18px}
+main h2 .sec-no{display:block;font:600 10px/1.5 var(--mono);letter-spacing:.16em;color:var(--accent);margin:0 0 8px}
+main h2 .sec-t{display:block}
+main h3{font:700 19px/1.55 var(--display);letter-spacing:-.005em;color:var(--ink);margin:28px 0 10px}
+main h3 .sec-no{font:600 .56em/1.5 var(--mono);color:var(--accent);letter-spacing:.06em;margin-right:.55em;vertical-align:.12em}
+main h4{font:650 15px/1.6 var(--sans);margin:21px 0 8px;color:var(--ink)}
+main p{margin:0 0 14px}
+main ul,main ol{padding-left:1.25em;margin:0 0 14px}
+main li{margin:.36em 0}
+main strong{font-weight:680;color:var(--ink)}
+main blockquote{margin:18px 0;padding:12px 16px;border-left:2px solid var(--accent);background:var(--quote);color:var(--body)}
+main blockquote p:last-child{margin:0}
+main code{font:.84em/1.65 var(--mono);background:var(--code);border:1px solid var(--code-rule);padding:1px 4px;color:var(--ink);overflow-wrap:anywhere;word-break:break-word}
+main pre{margin:16px 0;padding:13px 15px;background:var(--code);border:1px solid var(--code-rule);border-left:2px solid var(--accent);overflow-x:auto;font:10.8px/1.75 var(--mono);color:var(--ink);max-width:100%}
+main pre code{background:none;border:0;padding:0;white-space:pre}
+main .docref{font-size:.86em;color:var(--accent-deep);background:var(--quote);border-bottom:1px dotted var(--accent);padding:0 2px;overflow-wrap:anywhere}
+main .fold{margin:17px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);background:var(--fold)}
+main .fold>summary{cursor:pointer;padding:10px 2px;font:600 12px/1.65 var(--sans);color:var(--accent-deep);letter-spacing:.01em;list-style:none}
+main .fold>summary::-webkit-details-marker{display:none}
+main .fold>summary::before{content:"+";display:inline-block;width:1.4em;font:400 15px/1 var(--mono);color:var(--accent)}
+main .fold[open]>summary::before{content:"−"}
+main .fold>summary:hover{color:var(--accent)}
+main .fold>*:not(summary){margin-left:18px;margin-right:12px}
+main .fold>pre{margin-left:0;margin-right:0}
+main .fold[open]>summary{border-bottom:1px solid var(--rule-soft)}
+
+.table-wrap{max-width:100%;min-width:0;overflow-x:auto;margin:17px 0 22px;border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);background:var(--surface);scrollbar-width:thin}
+.table-hint{margin:0;padding:7px 10px 6px;font:9.8px/1.55 var(--mono);letter-spacing:.02em;color:var(--muted);border-bottom:1px solid var(--rule-soft)}
+.table-hint::before{content:"表 " attr(data-n) " / ";color:var(--accent);font-weight:650}
+.hint-narrow{display:none}
+table{width:100%;border-collapse:collapse;font:13.2px/1.64 var(--sans)}
+th,td{padding:9px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule-soft)}
+th{font:600 10.5px/1.55 var(--sans);letter-spacing:.025em;color:var(--ink);background:var(--th);border-bottom:1px solid var(--accent);white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:nth-child(even){background:var(--stripe)}
+td[style*="right"],th[style*="right"]{text-align:right;font-variant-numeric:tabular-nums}
+td[style*="right"]{white-space:nowrap}
+
+@media(min-width:701px){
+  main .table-wrap table:has(thead th:nth-child(6)){min-width:820px}
+  main .table-wrap table:has(thead th:nth-child(5)){min-width:730px}
+  main .table-wrap table:has(thead th:nth-child(4)):not(:has(thead th:nth-child(5))){min-width:600px}
+}
+
+@media(max-width:700px){
+  .wrap{width:calc(100% - 28px)}
+  main h2{font-size:23px;line-height:1.4;margin-bottom:14px}
+  main h3{font-size:17px;line-height:1.55;margin-top:22px}
+  main h4{font-size:14.6px;margin-top:18px}
+  main p{font-size:15px;line-height:1.82;margin-bottom:12px}
+  main .fold>*:not(summary){margin-left:0;margin-right:0}
+  .table-wrap{overflow:visible;border-top:1px solid var(--ink);background:transparent;margin:15px 0 20px}
+  .table-hint{padding:0 0 8px;border:0;background:transparent;font-size:10px;color:var(--muted)}
+  .hint-wide{display:none}
+  .hint-narrow{display:inline}
+  table,tbody,tr,td{display:block;width:100%}
+  thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  tbody{counter-reset:row}
+  tbody tr{border:1px solid var(--rule);border-left:2px solid var(--accent);background:var(--surface);margin:0 0 10px;padding:10px 11px;position:relative}
+  tbody tr:nth-child(even){background:var(--surface)}
+  tbody tr::before{counter-increment:row;content:"记录 " counter(row);display:block;font:600 9.5px/1.5 var(--mono);letter-spacing:.1em;color:var(--muted);margin-bottom:5px}
+  table td{border:0;padding:5px 0;display:grid;grid-template-columns:minmax(84px,34%) minmax(0,1fr);gap:10px;text-align:left!important;white-space:normal!important;min-width:0;overflow-wrap:break-word}
+  table td::before{content:attr(data-label);font:600 10px/1.6 var(--sans);color:var(--muted);letter-spacing:.01em}
+  table td.cell-key{display:block;border-bottom:1px dashed var(--rule);padding:0 0 6px;margin:0 0 5px;font-weight:700;font-size:15px;color:var(--ink)}
+  table td.cell-key::before{display:none}
+  table td[data-label=""]::before{display:none}
+  table td:last-child{border:0}
+  main pre{font-size:10px;padding:11px}
+  main .fold>summary{font-size:11.5px;padding:9px 0}
+}
+
+@media print{
+  @page{size:A4;margin:14mm}
+  @page wide-map{size:A4 landscape;margin:12mm}
+  html,body{background:#fff!important;color:#000!important}
+  body{font-size:9.4pt!important;line-height:1.55!important}
+  .wrap{width:100%!important}
+  .skip,.toc,.margin-rail,.ledger-nav,.cover-aside,.ledger-summary .summary-table,.table-hint,.rail-note,.nav-foot{display:none!important}
+  .cover,.ledger-head{background:#fff!important;border-bottom:1pt solid #000!important;color:#000!important}
+  .cover::before,.cover::after,.ledger-head::before,.ledger-head::after,.cover-rule,.ledger-strip{display:none!important}
+  .cover-top,.ledger-top{border-bottom:.5pt solid #999!important;padding:0 0 5pt!important;color:#000!important}
+  .cover-grid,.ledger-grid{display:block!important;padding:10pt 0!important}
+  .cover-main,.ledger-title{max-width:none!important}
+  .eyebrow,.title-tail,.file-id,.stamp,.state,.ledger-top,.cover-top{color:#000!important}
+  h1{font-size:24pt!important;line-height:1.25!important;color:#000!important;margin:4pt 0!important}
+  .title-tail{margin:2pt 0 8pt!important;font-size:9pt!important}
+  .lede{font-size:10pt!important;line-height:1.55!important;margin-bottom:6pt!important}
+  .gloss{font-size:8.4pt!important;line-height:1.5!important;color:#222!important}
+  .verdict{border:0!important;border-top:.5pt solid #999!important;padding:6pt 0!important;margin-top:8pt!important;background:#fff!important}
+  .verdict-v{font-size:10pt!important;color:#000!important}
+  .verdict-k{color:#000!important}
+  .document,.doc-grid,.paper{display:block!important}
+  main{max-width:none!important;width:100%!important;margin:0!important;padding:0!important;overflow:visible!important}
+  main .chapter{border:0!important;border-top:.75pt solid #777!important;padding:10pt 0 4pt!important;margin:0 0 12pt!important;background:#fff!important;break-before:auto}
+  main h2{font-size:17pt!important;line-height:1.3!important;margin:0 0 8pt!important;color:#000!important;break-after:avoid}
+  main h2 .sec-no{display:inline!important;font-size:7pt!important;margin:0 .6em 0 0!important;color:#000!important;letter-spacing:.04em}
+  main h2 .sec-t{display:inline!important}
+  main h3{font-size:11.5pt!important;line-height:1.35!important;margin:9pt 0 5pt!important;color:#000!important;break-after:avoid}
+  main h4{font-size:9.6pt!important;break-after:avoid}
+  main p,main li{color:#000!important}
+  main blockquote{background:#f5f5f5!important;border-left:1.5pt solid #555!important;color:#000!important}
+  main code{background:#f3f3f3!important;border-color:#ccc!important;color:#000!important}
+  main pre{white-space:pre-wrap!important;overflow:visible!important;background:#fafafa!important;border:.5pt solid #aaa!important;font-size:6.8pt!important;line-height:1.42!important;break-inside:auto}
+  main pre.wide-map{page:wide-map;break-before:page;break-inside:avoid;white-space:pre!important;font-size:7pt!important;width:auto!important;max-width:none!important}
+  .table-wrap{overflow:visible!important;border:.5pt solid #999!important;background:#fff!important;max-width:none!important;break-inside:auto}
+  table{display:table!important;width:100%!important;min-width:0!important;table-layout:fixed!important;border-collapse:collapse!important;font-size:7pt!important;line-height:1.4!important}
+  thead{display:table-header-group!important;position:static!important;width:auto!important;height:auto!important;clip:auto!important}
+  tbody{display:table-row-group!important}
+  tr{display:table-row!important;break-inside:avoid}
+  th,td{display:table-cell!important;width:auto!important;padding:3.5pt!important;border:0!important;border-bottom:.4pt solid #bbb!important;background:#fff!important;white-space:normal!important;overflow-wrap:anywhere!important;text-align:left!important;font-size:7pt!important}
+  th{background:#eee!important;color:#000!important;border-bottom:.75pt solid #555!important}
+  table td::before,tbody tr::before{display:none!important}
+  main .fold{display:block!important;border:.5pt solid #999!important;background:#fff!important;break-inside:auto;padding:0!important;margin:6pt 0!important}
+  main .fold>summary{background:#f2f2f2!important;color:#000!important;padding:3pt 5pt!important;border-bottom:.5pt solid #bbb!important;font-size:8pt!important}
+  main .fold>summary::before{content:"−"!important;font-size:8pt!important}
+  main .fold>*:not(summary){margin-left:0!important;margin-right:0!important}
+  details::details-content{display:block!important;content-visibility:visible!important;height:auto!important}
+  details>*:not(summary){display:block!important;content-visibility:visible!important}
+  .document-footer{border-top:.5pt solid #999!important;color:#000!important;background:#fff!important;padding-top:6pt!important}
+  a{text-decoration:none!important}
+}
+
+:root{
+  --ground:#e9e6df;--surface:#fbfaf6;--ink:#1f2729;--body:#363f41;--muted:#68726f;
+  --rule:#cbd1cb;--rule-soft:#e0e4de;--accent:#1f5d63;--accent-deep:#17484d;
+  --quote:#ecf1ed;--code:#f0f2ed;--code-rule:#d8ded7;--th:#e9eeea;--stripe:#f5f7f3;--fold:#f5f7f3;
+  --display:"Songti SC","STSong","Iowan Old Style",Georgia,serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --mono:"SF Mono",Menlo,Consolas,monospace;
+}
+body{background:var(--surface)}
+.ledger-head{background:var(--surface);position:relative;border-bottom:1px solid var(--ink)}
+.ledger-head::before{content:"";position:absolute;inset:0 auto 0 0;width:6px;background:repeating-linear-gradient(0deg,var(--accent) 0 22px,transparent 22px 30px)}
+.ledger-top{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;padding:15px 0 12px;font:9.6px/1.5 var(--mono);letter-spacing:.11em;color:#596763;text-transform:uppercase;border-bottom:1px solid var(--rule)}
+.stamp{color:var(--accent-deep);font-weight:650}.stamp b{color:var(--accent);font-size:11px;margin-left:3px}
+.state{color:#7b5d31}
+.ledger-grid{display:grid;grid-template-columns:minmax(0,1fr) 365px;gap:58px;padding:38px 0 31px;align-items:start}
+.eyebrow{font:9.6px/1.5 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 12px!important}
+.ledger-title h1{font:700 clamp(33px,3.7vw,48px)/1.25 var(--display);letter-spacing:-.018em;color:var(--ink);margin:0 0 11px;max-width:14em}
+.title-tail{font:11.5px/1.6 var(--mono);color:#65716d;letter-spacing:.035em;margin:0 0 23px}
+.title-tail span{padding:0 5px;color:var(--rule)}
+.title-tail .num{padding:0;color:#65716d}
+.lede{font:16.5px/1.8 var(--sans);color:#333c3d;margin:0 0 10px;max-width:65ch}
+.gloss{font:11.8px/1.72 var(--sans);color:var(--muted);max-width:69ch;margin:0!important}
+.ledger-summary{border-top:2px solid var(--accent);border-bottom:1px solid var(--rule);padding:0;min-width:0}
+.summary-row{display:grid;grid-template-columns:46px minmax(0,1fr);gap:12px;padding:12px 0 13px;border-bottom:1px solid var(--rule-soft)}
+.summary-row .k,.summary-table .k{font:9.3px/1.7 var(--mono);letter-spacing:.08em;color:var(--accent);text-transform:uppercase}
+.summary-row p{margin:0;font-size:13.5px;line-height:1.72;color:#343d3e}
+.summary-table{display:grid;grid-template-columns:1fr 1fr;margin:0;padding:0;border-left:1px solid var(--rule-soft);border-right:1px solid var(--rule-soft)}
+.summary-table>div{padding:10px 11px;border-bottom:1px solid var(--rule-soft);min-width:0}
+.summary-table>div:nth-child(odd){border-right:1px solid var(--rule-soft)}
+.summary-table>div:nth-last-child(-n+2){border-bottom:0}
+.summary-table dt{font:9px/1.5 var(--mono);letter-spacing:.09em;color:var(--muted);text-transform:uppercase}
+.summary-table dd{margin:3px 0 0;font:13px/1.5 var(--sans);color:var(--ink);overflow-wrap:anywhere}
+.summary-table small{font:9px/1.2 var(--mono);color:var(--muted);letter-spacing:.02em}
+.ledger-strip{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:10px 0 11px;border-top:1px solid var(--rule);font:9.8px/1.5 var(--mono);letter-spacing:.04em;color:#5d6965}
+.ledger-strip b{font:650 12px/1 var(--mono);color:var(--accent);margin-right:3px}
+.ledger-strip .strip-note{margin-left:auto;color:var(--muted);letter-spacing:.01em}
+.frame{width:min(1280px,calc(100% - 60px));margin:0 auto;display:grid;grid-template-columns:205px minmax(0,1fr);gap:42px;padding:30px 0 48px;align-items:start}
+.ledger-nav{position:sticky;top:18px;min-width:0;border-top:2px solid var(--ink);padding-top:11px}
+.nav-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.rail-k{font:9px/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.nav-mark{font:9px/1.5 var(--mono);color:#9aa39f;letter-spacing:.08em;margin:0}
+.ledger-nav .toc ol{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule-soft)}
+.ledger-nav .toc li{border-bottom:1px solid var(--rule-soft)}
+.ledger-nav .toc a{display:grid;grid-template-columns:34px minmax(0,1fr);gap:3px;padding:8px 0;text-decoration:none;color:#374244;min-width:0}
+.ledger-nav .toc .n{font:9.3px/1.7 var(--mono);letter-spacing:.03em;color:var(--accent)}
+.ledger-nav .toc .t{font-size:11.4px;line-height:1.55;overflow-wrap:anywhere}
+.ledger-nav .toc li.sub .n{color:var(--muted)}
+.ledger-nav .toc li.sub .t{font-size:10.7px;color:#5e6967}
+.ledger-nav .toc a:hover .t{color:var(--accent)}
+.nav-foot{border-top:1px solid var(--ink);margin-top:24px;padding-top:11px;font-size:10.5px;line-height:1.7;color:#5b6662}
+.nav-foot p{margin:0 0 7px}.nav-foot .muted{font-size:9.6px;color:var(--muted)}
+.paper{min-width:0;max-width:930px}
+main{min-width:0;max-width:100%;overflow-x:clip}
+main .chapter{background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--accent);padding:28px 30px 24px;margin:0 0 18px;min-width:0}
+main .chapter[data-chapter="s1"]{border-top:2px solid var(--ink)}
+main h2{display:grid;grid-template-columns:48px minmax(0,1fr);gap:12px;align-items:start;font-size:clamp(22px,2vw,27px)}
+main h2 .sec-no{display:block;font:600 10.5px/1.6 var(--mono);letter-spacing:.04em;color:var(--accent);border-top:2px solid var(--accent);padding-top:5px;margin:0}
+main h2 .sec-t{display:block}
+main h3{display:block}
+main h3 .sec-no{border-top:0}
+main .table-wrap{background:#fff}
+main table{font-size:13px}
+main th{font-family:var(--mono);font-size:9.7px;letter-spacing:.02em}
+main td.cell-key{font-weight:650;color:var(--ink)}
+main p,main li{max-width:46em}
+.table-hint{padding:5px 10px 4px;font-size:9.5px;line-height:1.45}
+.document-footer{width:min(1280px,calc(100% - 60px));margin:0 auto;border-top:1px solid var(--ink);padding:13px 0 30px;display:flex;justify-content:space-between;gap:14px;font:9.2px/1.6 var(--mono);letter-spacing:.05em;color:#65716d}
+@media(max-width:1120px){
+  .ledger-grid{grid-template-columns:minmax(0,1fr) 330px;gap:38px;padding:32px 0 27px}
+  .ledger-title h1{font-size:clamp(32px,3.8vw,43px)}
+  .lede{font-size:16px}
+  .frame{grid-template-columns:182px minmax(0,1fr);gap:29px;width:calc(100% - 52px)}
+  main .chapter{padding:25px 23px 21px}
+  main h2{grid-template-columns:43px minmax(0,1fr);gap:9px}
+}
+@media(max-width:940px){
+  .ledger-grid{grid-template-columns:1fr;gap:22px;padding:28px 0 24px}
+  .ledger-summary{max-width:none}
+  .ledger-summary{display:grid;grid-template-columns:1fr 1.2fr;gap:0 22px;border-top:1px solid var(--accent)}
+  .summary-row{border-bottom:0;padding:11px 0}
+  .summary-table{border-right:0}
+  .frame{display:block;padding-top:22px}
+  .ledger-nav{position:static;margin-bottom:20px}
+  .ledger-nav .toc ol{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--rule-soft);border-left:1px solid var(--rule-soft)}
+  .ledger-nav .toc li{border:0;border-right:1px solid var(--rule-soft);border-bottom:1px solid var(--rule-soft);min-width:0}
+  .ledger-nav .toc a{display:grid;grid-template-columns:29px minmax(0,1fr);gap:3px;padding:6px 7px}
+  .ledger-nav .toc .t{font-size:10.7px}
+  .ledger-nav .toc li.sub{display:block}
+  .ledger-nav .toc li.sub .t{font-size:10.2px;color:#4f5b58}
+  .nav-foot{display:none}
+  .paper{max-width:none}
+}
+@media(max-width:700px){
+  .ledger-head::before{width:4px}
+  .ledger-top{padding:10px 0 9px;font-size:8.6px;letter-spacing:.06em;gap:2px 11px}
+  .ledger-grid{padding:21px 0 19px;gap:18px}
+  .eyebrow{font-size:8.8px;margin-bottom:8px!important}
+  .ledger-title h1{font-size:clamp(28px,7.9vw,36px);line-height:1.3;margin-bottom:8px}
+  .title-tail{font-size:9.8px;line-height:1.65;margin-bottom:17px}
+  .lede{font-size:14.9px;line-height:1.8}
+  .gloss{font-size:11px;line-height:1.7}
+  .ledger-summary{display:block}
+  .summary-row{grid-template-columns:42px minmax(0,1fr);padding:10px 0;border-bottom:1px solid var(--rule-soft)}
+  .summary-row p{font-size:13px;line-height:1.7}
+  .summary-table{border-left:0;border-right:0}
+  .summary-table>div{padding:9px 8px}
+  .summary-table dd{font-size:12.4px}
+  .ledger-strip{gap:12px;padding:9px 0;font-size:8.8px}
+  .ledger-strip .strip-note{display:none}
+  .frame{width:calc(100% - 28px);padding:16px 0 36px}
+  .ledger-nav{border-top-width:1px;padding-top:8px;margin-bottom:14px}
+  .rail-k{font-size:8.6px;margin-bottom:7px}
+  .ledger-nav .toc ol{display:grid;grid-template-columns:1fr 1fr}
+  .ledger-nav .toc li:nth-child(odd){border-right:1px solid var(--rule-soft)}
+  .ledger-nav .toc a{padding:5px 6px}
+  .ledger-nav .toc .n{font-size:8.7px}
+  .ledger-nav .toc .t{font-size:10px;line-height:1.5}
+  main .chapter{padding:19px 13px 16px;margin-bottom:13px;border-left-width:2px}
+  main p,main li{max-width:none}
+  main h2{display:block;font-size:20.5px;line-height:1.45;margin-bottom:12px}
+  main h2 .sec-no{border-top:0;padding:0;margin-bottom:3px;font-size:9px}
+  .document-footer{display:block;line-height:1.8;padding:12px 0 26px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#s1">跳到正文</a>
+
+<header class="ledger-head">
+  <div class="wrap">
+    <div class="ledger-top">
+      <span class="stamp">LEDGER <b>07</b></span>
+      <span>PLAYLOG / COVERAGE RECORD</span>
+      <span class="state">FINAL · 2026-09-19</span>
+    </div>
+    <div class="ledger-grid">
+      <div class="ledger-title">
+        <p class="eyebrow">覆盖差异 · 核对记录</p>
+        <h1><span class="nw">v2/v3</span> 播放日志覆盖差异</h1>
+        <p class="title-tail">终版报告 <span>/</span> 单日锚定 <span class="num">20260919</span></p>
+        <p class="lede"><strong>两表不能视为等价替换。</strong> 本报告比较 v2 与 v3 播放日志终表的设备覆盖和节目清单；锚定 <strong>20260919</strong>。总账与共有设备节目集是全量实跑，两方向的机制解释及设备画像来自 <strong>1/1024 抽样</strong>，不把样本解释当作总体错误归因。</p>
+        <p class="gloss">设备×节目指一个设备与一个节目的组合；only_a 是 v2 有、v3 无，only_b 是 v3 有、v2 无；both 指两侧都有记录的设备。state 是播放日状态，mapping 是设备与自然人的映射。</p>
+      </div>
+      <div class="ledger-summary" aria-label="结论与核对范围">
+        <div class="summary-row verdict-row">
+          <span class="k">结论</span>
+          <p><strong>不能视为等价替换。</strong>设备覆盖、节目清单与设备画像均有实质差异。</p>
+        </div>
+        <dl class="summary-table">
+          <div><dt class="k">锚定日</dt><dd class="num">2026-09-19</dd></div>
+          <div><dt class="k">独有设备 / 各侧总量</dt><dd><span class="num">v2 19.33%</span> · <span class="num">v3 16.41%</span></dd></div>
+          <div><dt class="k">清单差 / 共有设备</dt><dd><span class="num">43.78%</span> <small>非错误率</small></dd></div>
+          <div><dt class="k">证据</dt><dd>全量 ＋ <span class="nw">1/1024</span> 抽样</dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="ledger-strip">
+      <span><b>5</b> 章</span><span><b>A</b> 附录</span><span><b>14</b> 表</span><span><b>9</b> 组折叠证据</span>
+      <span class="strip-note">抽样只解释方向，不作总体错误率估计。</span>
+    </div>
+  </div>
+</header>
+<div class="frame">
+
+<aside class="ledger-nav">
+  <div class="nav-head">
+    <p class="rail-k">INDEX / 核对索引</p>
+    <p class="nav-mark">07</p>
+  </div>
+  <nav class="toc"><ol><li class="item"><a href="#s1"><span class="n">01</span><span class="t">差异总账</span></a></li><li class="item"><a href="#s2"><span class="n">02</span><span class="t">节目集差异</span></a></li><li class="item sub"><a href="#s2-1"><span class="n">2.1</span><span class="t">形态、规模与合理边界</span></a></li><li class="item sub"><a href="#s2-2"><span class="n">2.2</span><span class="t">v2 多的方向</span></a></li><li class="item sub"><a href="#s2-3"><span class="n">2.3</span><span class="t">v3 多的方向</span></a></li><li class="item"><a href="#s3"><span class="n">03</span><span class="t">only 方向画像</span></a></li><li class="item"><a href="#s4"><span class="n">04</span><span class="t">口径备注</span></a></li><li class="item"><a href="#s5"><span class="n">05</span><span class="t">复现 SQL</span></a></li><li class="item"><a href="#appendix-a"><span class="n">A</span><span class="t">链路与来源</span></a></li></ol></nav>
+  <div class="nav-foot">
+    <p class="rail-k">阅读顺序</p>
+    <p>先核对总账，再进入节目集与方向机制；第 4 章集中记录口径边界。</p>
+    <p class="muted">表格可横向滚动；手机按字段转卡片。折叠内容在打印时完整展开。</p>
+  </div>
+</aside>
+<div class="paper">
+<main>
+
+
+
+<section class="chapter" data-chapter="s1"><h2 id="s1"><span class="sec-no"><span class="num">1</span></span><span class="sec-t">差异总账</span></h2>
+<div class="table-wrap" data-table="01"><p class="table-hint" data-n="01"><span class="hint-wide">宽表可在框内横向滚动；分母、样本范围与来源见相邻说明。</span><span class="hint-narrow">手机按字段逐条展示；分母、范围与来源见相邻说明。</span></p><table>
+<thead>
+<tr>
+<th>粒度</th>
+<th style="text-align: right;">only_a（v2 有 v3 无）</th>
+<th style="text-align: right;">占 v2</th>
+<th style="text-align: right;">only_b（v3 有 v2 无）</th>
+<th style="text-align: right;">占 v3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="cell-key" data-label="粒度">设备</td>
+<td data-label="only_a（v2 有 v3 无）" style="text-align: right;"><strong><span class="num">57,205,167</span></strong></td>
+<td data-label="占 v2" style="text-align: right;"><strong><span class="num">19.33%</span></strong></td>
+<td data-label="only_b（v3 有 v2 无）" style="text-align: right;"><strong><span class="num">46,855,654</span></strong></td>
+<td data-label="占 v3" style="text-align: right;"><strong><span class="num">16.41%</span></strong></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="粒度">设备×节目</td>
+<td data-label="only_a（v2 有 v3 无）" style="text-align: right;"><span class="num">293,544,580</span></td>
+<td data-label="占 v2" style="text-align: right;"><span class="num">13.33%</span></td>
+<td data-label="only_b（v3 有 v2 无）" style="text-align: right;"><span class="num">521,182,574</span></td>
+<td data-label="占 v3" style="text-align: right;"><span class="num">21.45%</span></td>
+</tr>
+</tbody>
+</table></div>
+<p>两侧全集：v2 <span class="num">295,940,929</span> 台、v3 <span class="num">285,591,416</span> 台，交集 <span class="num">238,735,762</span> 台。
+<strong>对账范围</strong>：双方均排除 OTT（source=<span class="num">2</span>）。v2 另排除 source≥<span class="num">100</span> 的派生行（自然人 mapping 分发到别机的行）；v3 只取 <code>utdid=sim_utdid</code> 的本机行。</p>
+<p>范围释义依据：原报告 §<span class="num">5</span> 索引的两份对账 SQL 均明确上述过滤；留存脚本锚定 <span class="num">0918</span>，本次只读取过滤条件解释原文“与 OTT”的歧义。<span class="num">0919</span> 数字与证据范围仍沿用终版报告，不新增运行验证。</p>
+<p>两个容易误读的分母：<strong><span class="num">18.32%</span> 是“完全 v2 多”形态占共有设备的比例</strong>，不是所有含 v2 多出节目的设备占比（后者为 <span class="num">18.32%</span>＋<span class="num">11.55%</span>＝<span class="num">29.87%</span>）；<strong><span class="num">68.03%</span> 是 v2 多出方向 <span class="num">1/1024</span> 样本中设备×节目对的归因占比</strong>，不是 <span class="num">18.32%</span> 设备形态里的占比。<span class="num">27.13%</span> 同样只属于设备×节目对口径。</p>
+<p><strong>证据范围</strong>：锚定日 <strong><span class="num">20260919</span></strong>（两侧 end_time 当前同语义，取值语义与复核边界见 §<span class="num">2.2</span>/§<span class="num">4</span>）。总账与共有设备节目集差异为 <span class="num">0919</span> 全量实跑；两侧去向机制与设备级画像为 <span class="num">0919</span> 的 <span class="num">1/1024</span> 抽样取证。对账 SQL 无手工过滤，复现索引见 §<span class="num">5</span>；过程、历史口径与对照数字见 <span class="docref">note-v2v3对账验证过程.md（源地址：note-v2v3对账验证过程.md）</span>。</p>
+</section><section class="chapter" data-chapter="s2"><h2 id="s2"><span class="sec-no"><span class="num">2</span></span><span class="sec-t">共有设备的节目集差异</span></h2>
+<p>本章只谈两侧都有记录的 <span class="num">238,735,762</span> 台设备（both）：差异有多大、长什么样、哪些算合理、为什么。</p>
+<h3 id="s2-1"><span class="sec-no"><span class="num">2.1</span></span><span class="sec-t">差异的形态、规模与哪些算合理</span></h3>
+<div class="table-wrap" data-table="02"><p class="table-hint" data-n="02"><span class="hint-wide">宽表可在框内横向滚动；分母、样本范围与来源见相邻说明。</span><span class="hint-narrow">手机按字段逐条展示；分母、范围与来源见相邻说明。</span></p><table>
+<thead>
+<tr>
+<th>项</th>
+<th style="text-align: right;">设备数</th>
+<th style="text-align: right;">占 both（<span class="num">238,735,762</span>）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="cell-key" data-label="项">节目集一致</td>
+<td data-label="设备数" style="text-align: right;"><span class="num">134,218,189</span></td>
+<td data-label="占 both（238,735,762）" style="text-align: right;"><span class="num">56.22%</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="项"><strong>节目集有差异</strong></td>
+<td data-label="设备数" style="text-align: right;"><strong><span class="num">104,517,573</span></strong></td>
+<td data-label="占 both（238,735,762）" style="text-align: right;"><strong><span class="num">43.78%</span></strong></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="项">├ ①完全 v3 多：v2 节目全在 v3 清单里</td>
+<td data-label="设备数" style="text-align: right;"><span class="num">33,203,899</span></td>
+<td data-label="占 both（238,735,762）" style="text-align: right;"><span class="num">13.91%</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="项">├ ②完全 v2 多：v3 节目全在 v2 清单里</td>
+<td data-label="设备数" style="text-align: right;"><span class="num">43,731,522</span></td>
+<td data-label="占 both（238,735,762）" style="text-align: right;"><span class="num">18.32%</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="项">└ ③相互都有多：两侧各有各的多出</td>
+<td data-label="设备数" style="text-align: right;"><span class="num">27,582,152</span></td>
+<td data-label="占 both（238,735,762）" style="text-align: right;"><span class="num">11.55%</span></td>
+</tr>
+</tbody>
+</table></div>
+<p>三种形态互斥、加总＝全部差异设备（守恒校验见下）。<strong><span class="num">43.78%</span> 是节目清单不一致率，不是数据错误率</strong>。</p>
+<details class="fold">
+<summary>每台多出节目数分布 · 四档、四个视角及守恒读法</summary>
+<p><strong>差异形态</strong>——每种形态内再按"每台多出的节目数"分四档；③是同一批设备从两侧各看一次（同一台设备两侧分别多出了几个），故展开为两列。单元格为设备数（占本列形态），每列纵向合计＝<span class="num">100%</span>：</p>
+<div class="table-wrap" data-table="03"><p class="table-hint" data-n="03"><span class="hint-wide">宽表可在框内横向滚动；分母、样本范围与来源见相邻说明。</span><span class="hint-narrow">手机按字段逐条展示；分母、范围与来源见相邻说明。</span></p><table>
+<thead>
+<tr>
+<th>每台多出节目数</th>
+<th style="text-align: right;">①完全 v3 多（v2 节目全在 v3 里）</th>
+<th style="text-align: right;">②完全 v2 多（v3 节目全在 v2 里）</th>
+<th style="text-align: right;">③相互都有多：v3 多出的</th>
+<th style="text-align: right;">③相互都有多：v2 多出的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="cell-key" data-label="每台多出节目数"><span class="num">1</span> 个</td>
+<td data-label="①完全 v3 多（v2 节目全在 v3 里）" style="text-align: right;"><span class="num">17,774,139</span>（<span class="num">53.5%</span>）</td>
+<td data-label="②完全 v2 多（v3 节目全在 v2 里）" style="text-align: right;"><span class="num">27,723,058</span>（<span class="num">63.4%</span>）</td>
+<td data-label="③相互都有多：v3 多出的" style="text-align: right;"><span class="num">13,062,034</span>（<span class="num">47.4%</span>）</td>
+<td data-label="③相互都有多：v2 多出的" style="text-align: right;"><span class="num">13,031,456</span>（<span class="num">47.2%</span>）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="每台多出节目数"><span class="num">2</span>–<span class="num">5</span> 个</td>
+<td data-label="①完全 v3 多（v2 节目全在 v3 里）" style="text-align: right;"><span class="num">10,762,488</span>（<span class="num">32.4%</span>）</td>
+<td data-label="②完全 v2 多（v3 节目全在 v2 里）" style="text-align: right;"><span class="num">14,046,365</span>（<span class="num">32.1%</span>）</td>
+<td data-label="③相互都有多：v3 多出的" style="text-align: right;"><span class="num">9,038,159</span>（<span class="num">32.8%</span>）</td>
+<td data-label="③相互都有多：v2 多出的" style="text-align: right;"><span class="num">11,109,204</span>（<span class="num">40.3%</span>）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="每台多出节目数"><strong>其中：<span class="num">1</span>–<span class="num">5</span> 个累计（前两行小计）</strong></td>
+<td data-label="①完全 v3 多（v2 节目全在 v3 里）" style="text-align: right;"><strong><span class="num">28,536,627</span>（<span class="num">85.94%</span>）</strong></td>
+<td data-label="②完全 v2 多（v3 节目全在 v2 里）" style="text-align: right;"><strong><span class="num">41,769,423</span>（<span class="num">95.51%</span>）</strong></td>
+<td data-label="③相互都有多：v3 多出的" style="text-align: right;"><strong><span class="num">22,100,193</span>（<span class="num">80.12%</span>）</strong></td>
+<td data-label="③相互都有多：v2 多出的" style="text-align: right;"><strong><span class="num">24,140,660</span>（<span class="num">87.52%</span>）</strong></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="每台多出节目数"><span class="num">6</span>–<span class="num">20</span> 个</td>
+<td data-label="①完全 v3 多（v2 节目全在 v3 里）" style="text-align: right;"><span class="num">3,597,242</span>（<span class="num">10.8%</span>）</td>
+<td data-label="②完全 v2 多（v3 节目全在 v2 里）" style="text-align: right;"><span class="num">1,802,954</span>（<span class="num">4.1%</span>）</td>
+<td data-label="③相互都有多：v3 多出的" style="text-align: right;"><span class="num">3,262,916</span>（<span class="num">11.8%</span>）</td>
+<td data-label="③相互都有多：v2 多出的" style="text-align: right;"><span class="num">2,855,791</span>（<span class="num">10.4%</span>）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="每台多出节目数"><strong>&gt;<span class="num">20</span> 个（长尾）</strong></td>
+<td data-label="①完全 v3 多（v2 节目全在 v3 里）" style="text-align: right;"><strong><span class="num">1,070,030</span>（<span class="num">3.2%</span>）</strong></td>
+<td data-label="②完全 v2 多（v3 节目全在 v2 里）" style="text-align: right;"><strong><span class="num">159,145</span>（<span class="num">0.4%</span>）</strong></td>
+<td data-label="③相互都有多：v3 多出的" style="text-align: right;"><strong><span class="num">2,219,043</span>（<span class="num">8.0%</span>）</strong></td>
+<td data-label="③相互都有多：v2 多出的" style="text-align: right;"><strong><span class="num">585,701</span>（<span class="num">2.1%</span>）</strong></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="每台多出节目数"><strong>四档合计＝本列分母（<span class="num">100%</span>）</strong></td>
+<td data-label="①完全 v3 多（v2 节目全在 v3 里）" style="text-align: right;"><strong><span class="num">33,203,899</span></strong></td>
+<td data-label="②完全 v2 多（v3 节目全在 v2 里）" style="text-align: right;"><strong><span class="num">43,731,522</span></strong></td>
+<td data-label="③相互都有多：v3 多出的" style="text-align: right;"><strong><span class="num">27,582,152</span></strong></td>
+<td data-label="③相互都有多：v2 多出的" style="text-align: right;"><strong><span class="num">27,582,152</span>（与左列同一批设备，勿相加）</strong></td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p><strong>去重对账与读法</strong>：①＋②＋③（③只计一次）＝<span class="num">104,517,573</span> 台＝上表"有差异"行，守恒；③的两列各自合计均为 <span class="num">27,582,152</span>——同一批设备被两个视角各数一次，<strong>不能横向相加</strong>，两侧分别多出 <span class="num">1</span>–<span class="num">5</span> 个也不等于合计只差 <span class="num">1</span>–<span class="num">5</span> 个。表内直接可读的两个结论：累计行"<span class="num">1</span>–<span class="num">5</span> 个"四口径占 <span class="num">80%</span>–<span class="num">96%</span>（差异是广谱现象，非少数重度设备拉高）；长尾行 v2 视角仅 <span class="num">0.4%</span>/<span class="num">2.1%</span> vs v3 视角 <span class="num">3.2%</span>/<span class="num">8.0%</span>（v3 多的方向长尾更厚，成因见 §<span class="num">2.3</span>）。四档百分比经四舍五入，纵向相加可能不恰为 <span class="num">100%</span>；累计行按原始设备数计算。</p>
+</blockquote>
+</details>
+<p><strong>减少差异的可改方向与验收口径</strong>见 <span class="docref">note §18.7（源地址：note-v2v3对账验证过程.md）</span>（口径清单正本＝note §<span class="num">18</span>）。</p>
+<p><strong>哪些差异算合理——豁免阶梯</strong>：以下衡量的是<strong>按不同接受标准调整后的清单不一致率，不是数据错误率</strong>；三种可计算尺度都只在①上豁免（②＋③固定计入不一致）。分母均为共有设备 <span class="num">238,735,762</span> 台；②＋③＝<span class="num">71,313,674</span> 台（<span class="num">43,731,522</span>＋<span class="num">27,582,152</span>，③只计一次），剩余＝<span class="num">71,313,674</span>＋①剩余（<span class="num">33,203,899</span>−豁免数）。</p>
+<div class="table-wrap" data-table="04"><p class="table-hint" data-n="04"><span class="hint-wide">宽表可在框内横向滚动；分母、样本范围与来源见相邻说明。</span><span class="hint-narrow">手机按字段逐条展示；分母、范围与来源见相邻说明。</span></p><table>
+<thead>
+<tr>
+<th>豁免尺度</th>
+<th>判定条件（白话）</th>
+<th style="text-align: right;">从①豁免</th>
+<th style="text-align: right;">剩余不一致</th>
+<th>性质</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="cell-key" data-label="豁免尺度">一·不豁免</td>
+<td data-label="判定条件（白话）">任何节目清单差异都算不一致</td>
+<td data-label="从①豁免" style="text-align: right;"><span class="num">0</span> 台</td>
+<td data-label="剩余不一致" style="text-align: right;"><strong><span class="num">104,517,573</span>（<span class="num">43.78%</span>）</strong></td>
+<td data-label="性质">原表实测</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="豁免尺度">二·宽标准</td>
+<td data-label="判定条件（白话）">每台的全部多出节目，每个都满足"正片累计&gt;<span class="num">60</span> 秒或播放位置&gt;<span class="num">60</span> 秒"才豁免</td>
+<td data-label="从①豁免" style="text-align: right;"><span class="num">16,601,579</span>（①的 <span class="num">50.00%</span>）</td>
+<td data-label="剩余不一致" style="text-align: right;"><strong><span class="num">87,915,994</span>（<span class="num">36.83%</span>）</strong></td>
+<td data-label="性质">逐台实测（点估计）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="豁免尺度">三·全豁免</td>
+<td data-label="判定条件（白话）">①整形态视为合理</td>
+<td data-label="从①豁免" style="text-align: right;"><span class="num">33,203,899</span>（①的 <span class="num">100%</span>）</td>
+<td data-label="剩余不一致" style="text-align: right;"><strong><span class="num">71,313,674</span>（<span class="num">29.87%</span>）</strong></td>
+<td data-label="性质">假设（若完全接受"仅 v3 多"的差异，理论最低仍有 <span class="num">29.87%</span> 设备清单不同）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="豁免尺度">附·严标准</td>
+<td data-label="判定条件（白话）">每个多出节目在 v2 视频明细表有记录才豁免</td>
+<td data-label="从①豁免" style="text-align: right;">—</td>
+<td data-label="剩余不一致" style="text-align: right;">—</td>
+<td data-label="性质"><strong><span class="num">0919</span> 缺证，未完成</strong>（v2 明细表现存 <span class="num">0917/0918</span>/<span class="num">0919</span> 三日分区，同锚三天窗需 <span class="num">0920</span> 分区、尚未产出；不做非同构估计）</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>引用须带尺度名，证据强度：实测 ＞ 逐台实测 ＞ 假设。</li>
+<li>宽标准子集"v2 为何未收到却出现在 v3"的机制见 §<span class="num">2.3</span> 源表查证；历史对集（<span class="num">0918</span>）的 v2 视频明细命中率见 <span class="docref">note（源地址：note-v2v3对账验证过程.md）</span> §<span class="num">13</span>。</li>
+<li>证据 <code>logs/verify/v1v3-endtable-20260918/recheck-0919-20260920/ledger/</code>（<span class="num">0919</span> 锚全量：总账、节目集、多出分布、宽标准四项）。</li>
+</ul>
+<h3 id="s2-2"><span class="sec-no"><span class="num">2.2</span></span><span class="sec-t">v2 多的方向：v3 为什么没有</span></h3>
+<p><strong><span class="num">0919</span> 四桶</strong>（<span class="num">1/1024</span> 抽样，both 设备 <span class="num">181,958</span> 对）：</p>
+<div class="table-wrap" data-table="05"><p class="table-hint" data-n="05"><span class="hint-wide">宽表可在框内横向滚动；分母、样本范围与来源见相邻说明。</span><span class="hint-narrow">手机按字段逐条展示；分母、范围与来源见相邻说明。</span></p><table>
+<thead>
+<tr>
+<th>去向</th>
+<th style="text-align: right;">占比</th>
+<th>查证结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="cell-key" data-label="去向">v3 源层无行</td>
+<td data-label="占比" style="text-align: right;"><span class="num">68.03%</span></td>
+<td data-label="查证结论"><strong>所查历史源表中基本无匹配记录</strong>：早于 <span class="num">2026</span>-<span class="num">08</span>-<span class="num">13</span> 子段 <span class="num">98.24%</span>、<span class="num">2026</span>-<span class="num">08</span>-<span class="num">13</span> 起子段 <span class="num">98.91%</span> 无匹配记录（见下）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="去向">同式 <span class="num">5</span>s 复算在 v3 输入上未过</td>
+<td data-label="占比" style="text-align: right;"><span class="num">27.13%</span></td>
+<td data-label="查证结论">已排除上一行"v3 源层无行"：读取的 v3 state 输入有该设备×节目，但按 v3 正本公式复算后，正片累计 ts 票与末次 end 票均不过 <span class="num">5</span> 秒；复算分类，非生产拒因（见下"闸门机制"）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="去向">超 <span class="num">180</span> 天窗</td>
+<td data-label="占比" style="text-align: right;"><span class="num">3.74%</span></td>
+<td data-label="查证结论">按 v3 现行 <span class="num">180</span> 天窗口条件过滤</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="去向">过闸但无输出</td>
+<td data-label="占比" style="text-align: right;"><span class="num">1.09%</span></td>
+<td data-label="查证结论">其中 <span class="num">82.8%</span> 落在设备 <span class="num">500</span> 条截断（按"设备 v3 输出顶格 <span class="num">500</span>"代理判定，属观测分类；v2 侧同类截断的镜像）</td>
+</tr>
+</tbody>
+</table></div>
+<p>四桶对数依次为 <span class="num">123,793</span> / <span class="num">49,362</span> / <span class="num">6,814</span> / <span class="num">1,989</span>，合计 <span class="num">181,958</span>（=both 对）；"过闸但无输出"中按"设备 v3 输出顶格 <span class="num">500</span>"代理判截断的 <span class="num">1,647</span> 对，属观测分类、非明确截断。</p>
+<p>四桶互斥；第二桶的前提是 v3 state 输入已有该设备×节目行，因此不再属于"源层无行"。</p>
+<p><strong>源侧查证读法</strong>：该方向样本中的“源层无行”主体，在所查历史源表也没有匹配节目记录；设备本身大多仍在源里。未匹配不等于事件从未发生，少数历史命中却当前 state 无行的对，成因未知。</p>
+<p><strong>可能的解释仅是方向</strong>：v2 接服务端与客户端双源，v3 非 OTT 支只接 swift_hub（服务端播放事件的加工通道）；客户端覆盖可能相关，但未逐对证明。Web 上报端标签不构成渠道归属证明，也不排除其他成因。</p>
+<details class="fold">
+<summary>源侧历史核验 · 两个子段、样本分母与未证边界</summary>
+<p><strong>源侧查证（两个子段均在该方向 <span class="num">1/1024</span> 哈希样本子集内全量逐对，非总体全量）</strong>——按"源表是否留有匹配记录"查证两条子段。<strong>分母定义："源层无行"桶＝该方向样本中 v3 源层无行的 <span class="num">123,793</span> 对</strong>（即上表首行对数），下表两子段样本对数之和即此分母。口径：早于 <span class="num">2026</span>-<span class="num">08</span>-<span class="num">13</span> 的子段查 <code>ytrec.playlog_video_base</code>（服务端单源的天级去重表，分区 <span class="num">20221202</span>–<span class="num">20260919</span> 连续近四年，按源表的历史等价物使用）；<span class="num">2026</span>-<span class="num">08</span>-<span class="num">13</span> 起的子段查事件级源表 <code>ytrec.playlog_video_base_fty</code>（分区自 <span class="num">20260813</span> 起）。</p>
+<div class="table-wrap" data-table="06"><p class="table-hint" data-n="06"><span class="hint-wide">宽表可在框内横向滚动；分母、样本范围与来源见相邻说明。</span><span class="hint-narrow">手机按字段逐条展示；分母、范围与来源见相邻说明。</span></p><table>
+<thead>
+<tr>
+<th>子段</th>
+<th style="text-align: right;">样本对数</th>
+<th style="text-align: right;">事件日命中</th>
+<th style="text-align: right;">放宽任一天命中</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="cell-key" data-label="子段">早于 <span class="num">2026</span>-<span class="num">08</span>-<span class="num">13</span></td>
+<td data-label="样本对数" style="text-align: right;"><span class="num">97,623</span></td>
+<td data-label="事件日命中" style="text-align: right;"><span class="num">1,715</span></td>
+<td data-label="放宽任一天命中" style="text-align: right;"><span class="num">3,017</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="子段"><span class="num">2026</span>-<span class="num">08</span>-<span class="num">13</span> 起（可查期）</td>
+<td data-label="样本对数" style="text-align: right;"><span class="num">26,170</span></td>
+<td data-label="事件日命中" style="text-align: right;"><span class="num">286</span></td>
+<td data-label="放宽任一天命中" style="text-align: right;"><span class="num">306</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="子段"><strong>合计（＝"源层无行"桶 <span class="num">123,793</span>）</strong></td>
+<td data-label="样本对数" style="text-align: right;"><strong><span class="num">123,793</span></strong></td>
+<td data-label="事件日命中" style="text-align: right;"><strong><span class="num">2,001</span></strong></td>
+<td data-label="放宽任一天命中" style="text-align: right;"><strong><span class="num">3,323</span></strong></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>两个子段绝大多数对（<span class="num">98.24%</span> / <span class="num">98.91%</span>）在<strong>所查历史源表</strong>中<strong>无匹配记录</strong>——即这批对的"源层无行"基本不是"收录后才丢"，缺的主要是这些"设备×节目"对，设备本身大多在源里。</li>
+<li>少数在源表历史有记录、但当前 state 无该行：合计 <span class="num">2,001/123</span>,<span class="num">793</span>＝<strong><span class="num">1.62%</span></strong>（放宽为 <span class="num">3,323/123</span>,<span class="num">793</span>＝<span class="num">2.68%</span>）。<strong>这批对的成因未知</strong>（不认定为 v3 加工链丢弃，也不认定为其它）；"所查源表无匹配记录"只陈述查证结果，不等于证明该事件从未发生，也不适用于这 <span class="num">1.62%</span> 的少数对。</li>
+<li><strong>机制（方向，未逐对证实）</strong>：这批对可能与 v2 独有的客户端上报通道有关——v2 是服务端＋客户端双源；v3 非 OTT 支唯一输入源为 swift_hub（承载服务端播放事件的实时通道，与 v2 侧 tt/ut 表同为加工中间层、非原始事件）；<span class="num">0919</span> 画像显示 v2 独有设备上报端以 Web 为主（<span class="num">81.92%</span>，§<span class="num">3</span>），与之方向一致（上报端是来源端标签、非硬件机型，不构成渠道归属证明）。收窄方向落在是否接客户端通道（输入契约变更，已裁不做，见 <span class="docref">note §18.7（源地址：note-v2v3对账验证过程.md）</span>）；本轮未逐对证实，不排除其它成因。</li>
+<li>口径注：源表查得的设备在场率两行不同表不同窗（历史表 <span class="num">20260323</span>–<span class="num">0812</span> 子段 <span class="num">98.95%</span>、事件表 <span class="num">20260813</span>–<span class="num">0919</span> 子段 <span class="num">93.46%</span>），两数不可直接对比；<span class="num">2026</span>-<span class="num">08</span>-<span class="num">13</span> 起子段另有 <span class="num">13</span> 对异常未来时间戳未核（<span class="num">0.05%</span>，不影响主体）。证据 <code>logs/verify/v1v3-endtable-20260918/base-hist-20260920/</code>。</li>
+</ul>
+</details>
+<p><strong>闸门解释：已证的是输入差，不是最终公式不同。</strong> <span class="num">5</span>s 表示 <span class="num">5</span> 秒门槛；ts 是正片累计播放时长，end 是末次播放位置。在读取的 v3 日状态输入上复算未过的分类，不是生产拒因，也不能外推为门槛算法造成的差异占比。</p>
+<p><span class="num">0919</span> 起两侧最终 <span class="num">5</span> 秒公式按同形口径比较：v2 的末次播放取值来自用户确认，本次未取得运行 SQL 独立复核。差异可能来自输入行集、ts 票、end 票或共同作用；来源覆盖与上游累计、跨 video 取行次序仍未逐对闭环到原始事件。</p>
+<details class="fold">
+<summary>闸门证据与分类口径 · 两种样本分母、目的性样例及编号</summary>
+<p><strong>闸门机制</strong>：这里的 <span class="num">27.13%</span> <strong>不是说两侧 <span class="num">5</span>s 过滤逻辑不同</strong>。<span class="num">0919</span> 起两侧判定形状可视为同口径：ts 票均为正片累计，end 票均按最近播放取（v2 侧自 <span class="num">0919</span> 起据用户确认，本次未独立取得运行 SQL 复核）。该桶只是在读取的 v3 state 输入上复算后，<code>正片累计 ts &lt;= 5</code> 且 <code>末次 end &lt;= 5</code>，因此未过 <span class="num">5</span> 秒；<strong>系复算分类、非生产拒因</strong>。</p>
+<p>更准确的说法是：<strong>同形公式吃到了不同输入，或同一播放在两侧加工后的票值不同</strong>。差异可能落在 ts 票，也可能落在 end 票，还可能两者同时存在；不能简化成"只是 ts 值不一样"。</p>
+<p>若按"源数据差异 / 计算方式差异"分层：<strong>最终 <span class="num">5</span>s 公式不是当前可证差异</strong>；已证差异落在闸门输入层——两侧输入行集或票值不同。这个输入差异的来源又可能包括上游来源覆盖（v2 为 tt∪ut 双源，v3 非 OTT 支为 swift_hub 单源）与上游加工口径（累计、跨 video 取行次序、窗口等），本轮未逐对闭环到原始事件。因此 a1/a6 只能证明两侧闸门输入票值不同，不能断言原始源数据不同；a7 只能证明候选 video 输入行与次序不同，分歧来源仍未证。逐例样本为目的性选取，比例不外推；上游累计口径与跨 video 取行次序差仍待量化（见 <span class="docref">case/差异case.md（源地址：差异case.md）</span> §<span class="num">1</span>、<span class="docref">note §18.2（源地址：note-v2v3对账验证过程.md）</span>）。</p>
+<blockquote>
+<p>口径注：本方向总样本 <span class="num">293,774</span> 对（全量 v2-only 对口径，含 v2 独有设备），其中"同式 <span class="num">5</span>s 复算在 v3 输入上未过"子集 <span class="num">69,766</span> 对（<span class="num">0919</span> p2c 落盘）；上表 <span class="num">27.13%</span> 为 both 口径（对应 <span class="num">49,362</span> 对），两分母不同。<span class="num">27.13%</span> 系<strong>复算分类</strong>（按 v3 正本公式在读取输入上复算），不可外推为生产拒因占比，不外推。</p>
+</blockquote>
+</details>
+<h3 id="s2-3"><span class="sec-no"><span class="num">2.3</span></span><span class="sec-t">v3 多的方向：v2 为什么没有</span></h3>
+<p><strong><span class="num">0919</span> 五桶</strong>（<span class="num">1/1024</span> 抽样，样本 <span class="num">503,025</span> 对，锚定 <span class="num">0919</span> 分区；先看 v2 视频明细层有没有该节目行，其余按去向）：</p>
+<div class="table-wrap" data-table="07"><p class="table-hint" data-n="07"><span class="hint-wide">宽表可在框内横向滚动；分母、样本范围与来源见相邻说明。</span><span class="hint-narrow">手机按字段逐条展示；分母、范围与来源见相邻说明。</span></p><table>
+<thead>
+<tr>
+<th>去向</th>
+<th style="text-align: right;">占比</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="cell-key" data-label="去向">v2 视频明细层无该节目行</td>
+<td data-label="占比" style="text-align: right;"><span class="num">85.28%</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="去向"><span class="num">5</span> 秒闸门拒（复算分类）</td>
+<td data-label="占比" style="text-align: right;"><span class="num">6.47%</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="去向">对账口径排除派生行（来源标记≥<span class="num">100</span>，数据在、口径剔）</td>
+<td data-label="占比" style="text-align: right;"><span class="num">6.28%</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="去向">自动播放行（复算分类；v3 源天然过滤自动播放为已知前提，见 §<span class="num">4</span>）</td>
+<td data-label="占比" style="text-align: right;"><span class="num">1.40%</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="去向">按复算归入截断与自然人 mapping 未命中（观测分类，非生产判定）</td>
+<td data-label="占比" style="text-align: right;"><span class="num">0.57%</span>（=v2 limit 层截断 <span class="num">818</span> 对 + v2 终表 mapping/rk5<span class="num">00</span> 未命中 <span class="num">2,068</span> 对，与维表无关）</td>
+</tr>
+</tbody>
+</table></div>
+<p>五桶对数依次为 <span class="num">428,979</span> / <span class="num">32,531</span> / <span class="num">31,577</span> / <span class="num">7,052</span> / <span class="num">2,886</span>，合计 <span class="num">503,025</span>。</p>
+<details class="fold">
+<summary>视频明细无行的四因子 · <span class="num">428,979</span> 对子集及播放日期分布</summary>
+<p><strong>首行（视频明细无该节目行）的成因拆分</strong>：</p>
+<ul>
+<li>分母：<span class="num">428,979</span> 对，即上一表首行的对；</li>
+<li>源：v2 的两路输入中间表——服务端通道 <code>tt_playlog_utdid_to_video</code> ∪ 客户端通道 <code>ut_playlog_utdid_to_video</code>（各取 <span class="num">0919</span> 分区）；</li>
+<li>因子按"源里到底有什么"互斥定义。</li>
+</ul>
+<div class="table-wrap" data-table="08"><p class="table-hint" data-n="08"><span class="hint-wide">宽表可在框内横向滚动；分母、样本范围与来源见相邻说明。</span><span class="hint-narrow">手机按字段逐条展示；分母、范围与来源见相邻说明。</span></p><table>
+<thead>
+<tr>
+<th>因子</th>
+<th style="text-align: right;">设备-节目对</th>
+<th style="text-align: right;">占比</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="cell-key" data-label="因子">源有设备行、有别的有效节目，但不含目标节目</td>
+<td data-label="设备-节目对" style="text-align: right;"><span class="num">346,939</span></td>
+<td data-label="占比" style="text-align: right;"><span class="num">80.88%</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="因子">源侧设备级缺失</td>
+<td data-label="设备-节目对" style="text-align: right;"><span class="num">73,053</span></td>
+<td data-label="占比" style="text-align: right;"><span class="num">17.03%</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="因子">源含目标节目行却被丢弃（v2 视频明细层每设备 <span class="num">500</span> 条截断；按"被截设备满额"代理判定，属观测分类）</td>
+<td data-label="设备-节目对" style="text-align: right;"><span class="num">7,532</span></td>
+<td data-label="占比" style="text-align: right;"><span class="num">1.76%</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="因子">源有设备行、但无任何有效节目（全落哨兵 <span class="num">0</span>）</td>
+<td data-label="设备-节目对" style="text-align: right;"><span class="num">1,455</span></td>
+<td data-label="占比" style="text-align: right;"><span class="num">0.34%</span></td>
+</tr>
+</tbody>
+</table></div>
+<p>同一分母按目标节目的播放日三分：早于 <span class="num">2026</span>-<span class="num">08</span>-<span class="num">06</span> 占 <span class="num">90.27%</span> / <span class="num">0806</span>–<span class="num">0918</span> 占 <span class="num">9.72%</span> / 当天（<span class="num">0919</span>）占 <span class="num">0.005%</span>（<span class="num">23</span> 对）。</p>
+</details>
+<p><strong>样本观察</strong>：在无视频明细行的 <span class="num">428,979</span> 对子集中，播放早于 v2 建表日的分布占 <span class="num">90.27%</span>，主体指向建表日边界，与“v3 数据更全”方向一致。</p>
+<ul>
+<li>v2 视频明细表 <span class="num">2026</span>-<span class="num">08</span>-<span class="num">06</span> 建表，v3 的 <span class="num">180</span> 天窗能取到建表日前的历史，故同一批对在 v2 无行、在 v3 有行；</li>
+<li><strong>建表日前的播放分布（早于 <span class="num">0806</span> 占 <span class="num">90.27%</span>）是观测到的现象，不据此认定"v2 无建表前回填"</strong>——回填与否属未证事实；</li>
+<li>行级门槛（ts&gt;<span class="num">0</span> 或 end_time&gt;<span class="num">0</span>）不构成拒收解释（v2 video 层上游已生效，note §<span class="num">10.2</span>）。</li>
+</ul>
+<p><strong>其他成因的证据边界</strong>：</p>
+<ul>
+<li>源缺失：目标节目在 <span class="num">0919</span> 当天有播放的仅 <span class="num">23</span> 对（播放日三分"当天"档）——该数仅是播放时间分布，不能据此排除源缺失；</li>
+<li>窗口：两侧确有 <span class="num">180</span> 天机制，但仅此不足以排除边界过滤差；</li>
+<li>维表：<span class="num">0919</span> 维表因素未复测，尚不能排除。</li>
+</ul>
+<p>与"允许 v3 多"的关系：多出方向的合理豁免阶梯见 §<span class="num">2.1</span>。</p>
+<p>抽样口径：<span class="num">1/1024</span> 设备哈希，锚定 <span class="num">0919</span> 分区；样本 <span class="num">503,025</span> 对（五桶）/ <span class="num">428,979</span> 对（四因子）；比例为样本值、不可直接乘总体。</p>
+<details class="fold">
+<summary>v3 多方向证据地址 · 五桶与四因子</summary>
+<ul>
+<li>五桶证据：<code>logs/verify/v1v3-endtable-20260918/recheck-0919-20260920/reanchor/f1_out.txt</code>；</li>
+<li>四因子证据：同目录 <code>reanchor/f2_out.txt</code>。</li>
+</ul>
+</details>
+</section><section class="chapter" data-chapter="s3"><h2 id="s3"><span class="sec-no"><span class="num">3</span></span><span class="sec-t">设备级 only 方向画像（v2 独有设备）</span></h2>
+<p>依赖客户端来源（UT/cookie）与活跃设备行为的消费场景应重点验收；本报告未量化对推荐效果的影响。</p>
+<p><strong>对象</strong>：v2 有、v3 无的设备（only_a），<span class="num">0919</span> 分区 <span class="num">1/1024</span> 设备哈希切片，共 <strong><span class="num">55,704</span> 台</strong>（切片实测；对账口径与画像口径两路重建结果完全相同，见 §<span class="num">5</span> 证据）。</p>
+<p><strong>新鲜度</strong>（按该设备最后播放距锚定日分档）：</p>
+<div class="table-wrap" data-table="09"><p class="table-hint" data-n="09"><span class="hint-wide">宽表可在框内横向滚动；分母、样本范围与来源见相邻说明。</span><span class="hint-narrow">手机按字段逐条展示；分母、范围与来源见相邻说明。</span></p><table>
+<thead>
+<tr>
+<th>最后播放距锚定日</th>
+<th style="text-align: right;">设备数</th>
+<th style="text-align: right;">占切片</th>
+<th style="text-align: right;">其中仅 <span class="num">1</span> 行</th>
+<th style="text-align: right;">户均行</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="cell-key" data-label="最后播放距锚定日">当天（<span class="num">0</span>d，含锚日）</td>
+<td data-label="设备数" style="text-align: right;"><span class="num">940</span></td>
+<td data-label="占切片" style="text-align: right;"><span class="num">1.69%</span></td>
+<td data-label="其中仅 1 行" style="text-align: right;"><span class="num">266</span>（<span class="num">28.3%</span>）</td>
+<td data-label="户均行" style="text-align: right;"><span class="num">37.34</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="最后播放距锚定日"><span class="num">1</span>–<span class="num">7</span> 天</td>
+<td data-label="设备数" style="text-align: right;"><span class="num">2,073</span></td>
+<td data-label="占切片" style="text-align: right;"><span class="num">3.72%</span></td>
+<td data-label="其中仅 1 行" style="text-align: right;"><span class="num">1,660</span>（<span class="num">80.1%</span>）</td>
+<td data-label="户均行" style="text-align: right;"><span class="num">3.85</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="最后播放距锚定日"><span class="num">8</span>–<span class="num">30</span> 天</td>
+<td data-label="设备数" style="text-align: right;"><span class="num">7,149</span></td>
+<td data-label="占切片" style="text-align: right;"><span class="num">12.83%</span></td>
+<td data-label="其中仅 1 行" style="text-align: right;"><span class="num">6,137</span>（<span class="num">85.8%</span>）</td>
+<td data-label="户均行" style="text-align: right;"><span class="num">1.73</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="最后播放距锚定日"><span class="num">31</span>–<span class="num">90</span> 天</td>
+<td data-label="设备数" style="text-align: right;"><span class="num">19,043</span></td>
+<td data-label="占切片" style="text-align: right;"><span class="num">34.19%</span></td>
+<td data-label="其中仅 1 行" style="text-align: right;"><span class="num">16,820</span>（<span class="num">88.3%</span>）</td>
+<td data-label="户均行" style="text-align: right;"><span class="num">1.32</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="最后播放距锚定日">&gt;<span class="num">90</span> 天</td>
+<td data-label="设备数" style="text-align: right;"><span class="num">26,497</span></td>
+<td data-label="占切片" style="text-align: right;"><span class="num">47.57%</span></td>
+<td data-label="其中仅 1 行" style="text-align: right;"><span class="num">23,959</span>（<span class="num">90.4%</span>）</td>
+<td data-label="户均行" style="text-align: right;"><span class="num">1.18</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="最后播放距锚定日"><strong>小计：早于 <span class="num">30</span> 天（上两行）</strong></td>
+<td data-label="设备数" style="text-align: right;"><strong><span class="num">45,540</span></strong></td>
+<td data-label="占切片" style="text-align: right;"><strong><span class="num">81.75%</span></strong></td>
+<td data-label="其中仅 1 行" style="text-align: right;"><span class="num">40,779</span>（<span class="num">89.5%</span>）</td>
+<td data-label="户均行" style="text-align: right;">—</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="最后播放距锚定日">未知（仅未来时间戳脏值）</td>
+<td data-label="设备数" style="text-align: right;"><span class="num">2</span></td>
+<td data-label="占切片" style="text-align: right;"><span class="num">0.00%</span></td>
+<td data-label="其中仅 1 行" style="text-align: right;"><span class="num">1</span>（<span class="num">50.0%</span>）</td>
+<td data-label="户均行" style="text-align: right;"><span class="num">2.50</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="最后播放距锚定日"><strong>合计</strong></td>
+<td data-label="设备数" style="text-align: right;"><strong><span class="num">55,704</span></strong></td>
+<td data-label="占切片" style="text-align: right;"><strong><span class="num">100%</span></strong></td>
+<td data-label="其中仅 1 行" style="text-align: right;"><span class="num">48,843</span></td>
+<td data-label="户均行" style="text-align: right;"><span class="num">2.01</span></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>近期累计</strong>（"近 X 天"均<strong>含锚日当天</strong>）：近 <span class="num">7</span> 天 <span class="num">3,013</span> 台＝<span class="num">5.41%</span>（<span class="num">940</span>＋<span class="num">2,073</span>）；近 <span class="num">30</span> 天 <span class="num">10,162</span> 台＝<span class="num">18.24%</span>；早于 <span class="num">30</span> 天 <span class="num">45,540</span> 台＝<span class="num">81.75%</span>。近 <span class="num">30</span> 天与早于 <span class="num">30</span> 天两档相加为 <span class="num">55,702</span> 台，另 <span class="num">2</span> 台因最后播放时间为未来脏值落入"未知"档、<strong>不计入两档任一侧</strong>。</p>
+<details class="fold">
+<summary>画像读法与消费限制 · 新鲜度、行形态及不外推条件</summary>
+<p><strong>结论</strong>：</p>
+<ul>
+<li><strong>最后播放早于 <span class="num">30</span> 天的设备是主体</strong>：<span class="num">31</span>–<span class="num">90</span> 天与 &gt;<span class="num">90</span> 天两档合并，<span class="num">19,043</span>＋<span class="num">26,497</span>＝<span class="num">45,540</span> 台；<span class="num">45,540</span>／<span class="num">55,704</span>＝<span class="num">81.75%</span>。其中 &gt;<span class="num">90</span> 天 <span class="num">26,497</span> 台，单独占全切片 <span class="num">47.57%</span>。</li>
+<li><strong>越久未播，行形态越轻</strong>：从当天到 &gt;<span class="num">90</span> 天，户均行依次为 <span class="num">37.34</span>→<span class="num">3.85</span>→<span class="num">1.73</span>→<span class="num">1.32</span>→<span class="num">1.18</span>，仅 <span class="num">1</span> 行占比依次为 <span class="num">28.3%</span>→<span class="num">80.1%</span>→<span class="num">85.8%</span>→<span class="num">88.3%</span>→<span class="num">90.4%</span>。</li>
+<li><strong>近期仍活跃部分不可忽略</strong>：近 <span class="num">30</span> 天仍占 <span class="num">18.24%</span>（近 <span class="num">7</span> 天 <span class="num">5.41%</span>）；当天活跃 <span class="num">940</span> 台户均 <span class="num">37</span> 行，属重度设备。</li>
+<li><strong>两表不能视为等价替换</strong>：依赖客户端来源（UT/cookie）与活跃设备行为的消费场景应重点验收；本文未量化对推荐效果的影响。</li>
+<li>本表只陈述"最后播放距锚定日多久"这一观测量与行数形态，<strong>不推断设备休眠、不称设备休眠、不把陈旧度等同账号废弃</strong>；成因外推受切片与口径限制，不在本证据内。</li>
+</ul>
+</details>
+<p><strong>上报端分布</strong>（同一 <span class="num">55,704</span> 台切片；上报端指 v2 输出行 source 标签表示的设备身份/上报通道：<span class="num">1</span>=Web 群、<span class="num">3</span>=Pad、<span class="num">4</span>=App，<strong>不是实体硬件机型</strong>）：</p>
+<div class="table-wrap" data-table="10"><p class="table-hint" data-n="10"><span class="hint-wide">宽表可在框内横向滚动；分母、样本范围与来源见相邻说明。</span><span class="hint-narrow">手机按字段逐条展示；分母、范围与来源见相邻说明。</span></p><table>
+<thead>
+<tr>
+<th>上报端</th>
+<th style="text-align: right;">设备数</th>
+<th style="text-align: right;">占切片</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="cell-key" data-label="上报端">Web 群（source=<span class="num">1</span>）</td>
+<td data-label="设备数" style="text-align: right;"><span class="num">45,631</span></td>
+<td data-label="占切片" style="text-align: right;"><span class="num">81.92%</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="上报端">App（source=<span class="num">4</span>）</td>
+<td data-label="设备数" style="text-align: right;"><span class="num">8,691</span></td>
+<td data-label="占切片" style="text-align: right;"><span class="num">15.60%</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="上报端">Pad（source=<span class="num">3</span>）</td>
+<td data-label="设备数" style="text-align: right;"><span class="num">1,382</span></td>
+<td data-label="占切片" style="text-align: right;"><span class="num">2.48%</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="上报端"><strong>合计</strong></td>
+<td data-label="设备数" style="text-align: right;"><strong><span class="num">55,704</span></strong></td>
+<td data-label="占切片" style="text-align: right;"><strong><span class="num">100%</span></strong></td>
+</tr>
+</tbody>
+</table></div>
+<details class="fold">
+<summary>上报端与新鲜度交叉明细 · 同一切片，列内占比</summary>
+<p><strong>上报端 × 新鲜度交叉</strong>（同一切片；每台设备按 v2 行数最多的 source 归入一个上报端，并列取 source 更小；括号内为该上报端内占比）：</p>
+<div class="table-wrap" data-table="11"><p class="table-hint" data-n="11"><span class="hint-wide">宽表可在框内横向滚动；分母、样本范围与来源见相邻说明。</span><span class="hint-narrow">手机按字段逐条展示；分母、范围与来源见相邻说明。</span></p><table>
+<thead>
+<tr>
+<th>最后播放距锚定日</th>
+<th style="text-align: right;">Web 群（source=<span class="num">1</span>）</th>
+<th style="text-align: right;">App（source=<span class="num">4</span>）</th>
+<th style="text-align: right;">Pad（source=<span class="num">3</span>）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="cell-key" data-label="最后播放距锚定日">当天（<span class="num">0</span>d，含锚日）</td>
+<td data-label="Web 群（source=1）" style="text-align: right;"><span class="num">882</span>（<span class="num">1.93%</span>）</td>
+<td data-label="App（source=4）" style="text-align: right;"><span class="num">50</span>（<span class="num">0.58%</span>）</td>
+<td data-label="Pad（source=3）" style="text-align: right;"><span class="num">8</span>（<span class="num">0.58%</span>）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="最后播放距锚定日"><span class="num">1</span>–<span class="num">7</span> 天</td>
+<td data-label="Web 群（source=1）" style="text-align: right;"><span class="num">1,744</span>（<span class="num">3.82%</span>）</td>
+<td data-label="App（source=4）" style="text-align: right;"><span class="num">283</span>（<span class="num">3.26%</span>）</td>
+<td data-label="Pad（source=3）" style="text-align: right;"><span class="num">46</span>（<span class="num">3.33%</span>）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="最后播放距锚定日"><span class="num">8</span>–<span class="num">30</span> 天</td>
+<td data-label="Web 群（source=1）" style="text-align: right;"><span class="num">6,013</span>（<span class="num">13.18%</span>）</td>
+<td data-label="App（source=4）" style="text-align: right;"><span class="num">988</span>（<span class="num">11.37%</span>）</td>
+<td data-label="Pad（source=3）" style="text-align: right;"><span class="num">148</span>（<span class="num">10.71%</span>）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="最后播放距锚定日"><span class="num">31</span>–<span class="num">90</span> 天</td>
+<td data-label="Web 群（source=1）" style="text-align: right;"><span class="num">15,868</span>（<span class="num">34.77%</span>）</td>
+<td data-label="App（source=4）" style="text-align: right;"><span class="num">2,788</span>（<span class="num">32.08%</span>）</td>
+<td data-label="Pad（source=3）" style="text-align: right;"><span class="num">387</span>（<span class="num">28.00%</span>）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="最后播放距锚定日">&gt;<span class="num">90</span> 天</td>
+<td data-label="Web 群（source=1）" style="text-align: right;"><span class="num">21,124</span>（<span class="num">46.29%</span>）</td>
+<td data-label="App（source=4）" style="text-align: right;"><span class="num">4,581</span>（<span class="num">52.71%</span>）</td>
+<td data-label="Pad（source=3）" style="text-align: right;"><span class="num">792</span>（<span class="num">57.31%</span>）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="最后播放距锚定日"><strong>小计：早于 <span class="num">30</span> 天（上两行）</strong></td>
+<td data-label="Web 群（source=1）" style="text-align: right;"><strong><span class="num">36,992</span>（<span class="num">81.07%</span>）</strong></td>
+<td data-label="App（source=4）" style="text-align: right;"><strong><span class="num">7,369</span>（<span class="num">84.79%</span>）</strong></td>
+<td data-label="Pad（source=3）" style="text-align: right;"><strong><span class="num">1,179</span>（<span class="num">85.31%</span>）</strong></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="最后播放距锚定日">未知（仅未来时间戳脏值）</td>
+<td data-label="Web 群（source=1）" style="text-align: right;"><span class="num">0</span>（<span class="num">0.00%</span>）</td>
+<td data-label="App（source=4）" style="text-align: right;"><span class="num">1</span>（<span class="num">0.01%</span>）</td>
+<td data-label="Pad（source=3）" style="text-align: right;"><span class="num">1</span>（<span class="num">0.07%</span>）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="最后播放距锚定日"><strong>合计</strong></td>
+<td data-label="Web 群（source=1）" style="text-align: right;"><strong><span class="num">45,631</span>（<span class="num">100%</span>）</strong></td>
+<td data-label="App（source=4）" style="text-align: right;"><strong><span class="num">8,691</span>（<span class="num">100%</span>）</strong></td>
+<td data-label="Pad（source=3）" style="text-align: right;"><strong><span class="num">1,382</span>（<span class="num">100%</span>）</strong></td>
+</tr>
+</tbody>
+</table></div>
+</details>
+<p>交叉后看，<strong>App 不比 Web 更新鲜</strong>：早于 <span class="num">30</span> 天的比例为 App <span class="num">84.79%</span> vs Web <span class="num">81.07%</span>；近 <span class="num">7</span> 天（含锚日）为 App <span class="num">333</span> 台（<span class="num">3.83%</span>）vs Web <span class="num">2,626</span> 台（<span class="num">5.75%</span>）。该表仍只描述上报端标签与最后播放时间的交叉分布，不证明渠道成因。</p>
+<p><strong>来源结构未核</strong>：v2 独有设备的<strong>原始渠道来源分布</strong>（源自哪张 UT/cookie 上报表）与登录态拆分此前只在 <span class="num">0916/0918</span> 分区查过，<span class="num">0919</span> 本轮未复测；本节的"上报端"仅是 v2 输出行的来源端标签，不等价于渠道来源结构。旧日画像已迁 <span class="docref">note（源地址：note-v2v3对账验证过程.md）</span> §<span class="num">13</span>，报告不以旧日画像作终态结论。</p>
+<p><strong>切片口径与外推限制</strong>：<span class="num">1/1024</span> 设备哈希切片，两口径（对账正式口径 / 画像口径）切片样本同为 <span class="num">55,704</span> 台；<strong>不把"切片数×<span class="num">1024</span>"当作总体回算、也不把切片与全量的比值当作核验准确率</strong>（切片是抽样，非总体）。证据见 §<span class="num">5</span>。</p>
+<p><strong>样本结构推算（不是总体逐台统计）</strong>：按本节切片结构推算，App 标签的 v2 独有设备约占 v2 全量 <span class="num">3.01%</span>，其中早于 <span class="num">30</span> 天未播的部分约 <span class="num">2.56%</span>；不带置信区间。该切片中早于 <span class="num">30</span> 天的设备里 <span class="num">89.55%</span> 仅 <span class="num">1</span> 行（表内按 <span class="num">89.5%</span> 展示）。</p>
+</section><section class="chapter" data-chapter="s4"><h2 id="s4"><span class="sec-no"><span class="num">4</span></span><span class="sec-t">口径备注</span></h2>
+<ul>
+<li><span class="num">5</span>s 闸门：正片 ts 分支两侧一致（正片口径已自 <span class="num">0918</span> 分区起生产生效）；end_time 分支两侧取值语义已按用户确认同口径（v2 自 <span class="num">0919</span> 起"按最近播放取"、v3 末次快照；本次未独立取得 v2 运行 SQL 复核）。</li>
+<li>v2 多出方向样本中 <span class="num">27.13%</span> 为在读取的 v3 state 输入上按同形 <span class="num">5</span>s 公式复算未过的分类——<strong>不是断言两侧过滤逻辑不同；系复算分类、非生产拒因，也不等于门槛算法造成了 <span class="num">27.13%</span> 的差异</strong>；该数不可外推。</li>
+<li><strong>裁决：保留 v3 现状</strong>（<span class="num">2026</span>-<span class="num">09</span>-<span class="num">20</span>，末次快照=在线契约）。end 票的<strong>取值语义</strong>已在 <span class="num">0919</span> 两侧对齐（移出待评估项，见 <span class="docref">note §18.5（源地址：note-v2v3对账验证过程.md）</span>），但<strong>上游累计/跨 video 次序差仍待解释</strong>（见 <span class="docref">note §18.2（源地址：note-v2v3对账验证过程.md）</span> 与 §<span class="num">2.2</span> 闸门机制）。</li>
+<li>ts/end_time 片长封顶（v3 <span class="num">0918</span> 分区起生效）：值层已与 v2 <code>LEAST(vdo_len,·)</code> <strong>同级对齐</strong>（双侧均"先 <span class="num">24</span>h 钳制、后片长"、同为日×video 行、维表同源同定义）；残余两点待量化——各自运行日 MAX_PT 快照时点差、缺维表行时兜底语义差（见 <span class="docref">note §18.2（源地址：note-v2v3对账验证过程.md）</span> 片长 cap 残余）。</li>
+<li>自动播放过滤：<strong>一致</strong>（swift_hub 源头已过滤自动播放，与 v2 limit 层过滤等效）。</li>
+<li><strong>spread <span class="num">32</span> 台/组上限（仅 v3 有）</strong>：v3 把一条播放记录分发到同节目下最多 <span class="num">32</span> 台设备，先分发后 rk≤<span class="num">500</span>（每台设备按时间只保留最新 <span class="num">500</span> 条节目），分发行与本机行同池竞争席位。</li>
+<li><span class="num">32</span> 上限限制分发量、<strong>保护本机行不被挤出</strong>——当前数字受其保护，放开上限反而可能移动本报告数字（详见 <span class="docref">note §18.6（源地址：note-v2v3对账验证过程.md）</span>）。</li>
+<li>远端 only_b（历史最后播放）v2 侧分区已回收，不可核、不外推。</li>
+<li>全部过程/更正记录见 <span class="docref">note-v2v3对账验证过程.md（源地址：note-v2v3对账验证过程.md）</span>；</li>
+<li><strong>除数据源外仍保留/待解释的口径差异（§<span class="num">18.2</span> <span class="num">7</span> 项；另 §<span class="num">18.1</span> 已接受的有因差异 <span class="num">3</span> 项）与已移出项依据</strong>见 <span class="docref">note §18（源地址：note-v2v3对账验证过程.md）</span>。</li>
+</ul>
+</section><section class="chapter" data-chapter="s5"><h2 id="s5"><span class="sec-no"><span class="num">5</span></span><span class="sec-t">复现 SQL（证据附录）</span></h2>
+<p>仅保存原报告已有的文件索引；本次只读核对两份对账 SQL 的过滤条件，未执行 SQL，也未内嵌这些文件正文。</p>
+<details class="fold">
+<summary>复现文件索引 · <span class="num">12</span> 项用途、地址与历史口径</summary>
+<div class="table-wrap" data-table="12"><p class="table-hint" data-n="12"><span class="hint-wide">宽表可在框内横向滚动；分母、样本范围与来源见相邻说明。</span><span class="hint-narrow">手机按字段逐条展示；分母、范围与来源见相邻说明。</span></p><table>
+<thead>
+<tr>
+<th>用途</th>
+<th>文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="cell-key" data-label="用途">总账（权威，<span class="num">0919</span> 全量）</td>
+<td data-label="文件"><code>logs/verify/v1v3-endtable-20260918/recheck-0919-20260920/ledger/l1_out.json</code>（脚本 <code>l1_zhen_0919.sql</code>）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="用途">both 内节目集差异（<span class="num">0919</span> 全量）</td>
+<td data-label="文件">同目录 <code>ledger/l2_out.json</code>（<code>l2_jialin_0919.sql</code>）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="用途">多出节目数分布（<span class="num">0919</span> 全量）</td>
+<td data-label="文件">同目录 <code>ledger/l3_out.json</code>（<code>l3_dist_0919.sql</code>）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="用途">宽标准豁免（<span class="num">0919</span> 全量）</td>
+<td data-label="文件">同目录 <code>ledger/l4_out.json</code>（<code>l4_n_0919.sql</code>）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="用途">v3-only 五桶 + 多因子（<span class="num">0919</span> <span class="num">1/1024</span>）</td>
+<td data-label="文件"><code>logs/verify/v1v3-endtable-20260918/recheck-0919-20260920/reanchor/f1_out.txt</code>、<code>f2_out.txt</code></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="用途">v2-only 四桶 + 闸门探针（<span class="num">0919</span> <span class="num">1/1024</span>）</td>
+<td data-label="文件"><code>logs/verify/v1v3-endtable-20260918/recheck-0919-20260920/p2c_out.txt</code>、<code>p7_out.txt</code></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="用途">闸门桶逐对样本 + 上游通道点查（<span class="num">0919</span>）</td>
+<td data-label="文件"><span class="docref">case/差异case.md（源地址：差异case.md）</span>（逐例事实与根因状态；原始输出仍在 <code>logs/verify/v1v3-endtable-20260918/gate-attribution-0919-20260921/</code>）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="用途">base 历史核验（<span class="num">0919</span> 两个子段）</td>
+<td data-label="文件"><code>logs/verify/v1v3-endtable-20260918/base-hist-20260920/s10_out.txt</code>、<code>s11_out.txt</code></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="用途">设备级 only 画像（<span class="num">0919</span> <span class="num">1/1024</span>）</td>
+<td data-label="文件"><code>logs/verify/v1v3-endtable-20260918/gapfill-0919-20260921/g1_0919_recency.out</code>（画像）、<code>g2_0919_crosscheck.out</code>（切片对回）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="用途">对账 SQL 正本</td>
+<td data-label="文件"><span class="docref">case/v1v3差异问题-一只-真.sql（源地址：v1v3差异问题-一只-真.sql）</span>、<span class="docref">case/v1v3差异问题-jialin.sql（源地址：v1v3差异问题-jialin.sql）</span></td>
+</tr>
+<tr>
+<td class="cell-key" data-label="用途">v2 节目 SQL 正本</td>
+<td data-label="文件"><span class="docref">sql/（源地址：../sql/）</span>（五份，含 tt/ut 双源）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="用途">历史口径（<span class="num">0916/0918</span>）复现索引</td>
+<td data-label="文件"><code>logs/verify/v1v3-endtable-20260916/</code>、<code>logs/verify/v1v3-endtable-20260918/</code>（<code>both-recheck-20260920/</code>、<code>v2norow-split-20260920/</code>、<code>v2only-recheck-20260920/</code>、<code>deepdive/</code>、<code>onlya-recency-20260920/</code>、<code>reasonable-n-20260920/</code>）；迁移说明见 note §<span class="num">13</span></td>
+</tr>
+</tbody>
+</table></div>
+</details>
+<p>内部桶字母（a/b/c/d）与探针编号（l1–l4、f1/f2、p7、s1<span class="num">0</span>/s1<span class="num">1</span>、g1/g2）仅在本附录及 note 使用。</p>
+</section><section class="chapter" data-chapter="appendix-a"><h2 id="appendix-a"><span class="sec-no">附录 A</span><span class="sec-t">链路背景与来源</span></h2>
+<p>本附录只补充结构与术语，不新增业务验证结论。比较结论以原终版报告为准；链路蓝本来自 <code>00_链路依赖图.md</code>，证据范围语境来自 <code>03_验证契约与报告.md</code>。</p>
+<h3>A1. 读图所需术语</h3>
+<ul>
+<li>fty 是事件级清洗明细；一行源日志对应一行输出，须以维表 <code>dim_yt_vdo</code> 的分区内 <code>vdo_id</code> 唯一为前提，键重数大于 <span class="num">1</span> 会放大事件行数，本报告没有销去此前置缺口。</li>
+<li>Stage0 是事件清洗；Stage1 是日状态聚合；Stage2 是 <span class="num">180</span> 天窗口内的交付计算。pair 分三支（非 OTT、OTT 精确、OTT 兜底），把设备和自然人关系带到交付层。</li>
+<li>OTT 是 source=<span class="num">2</span> 的大屏上报支路；其余 source 在本报告分别表示 Web 群、Pad、App 的上报端标签，不等同硬件或渠道来源证明。</li>
+<li>下图是依据 <span class="num">00</span> 与终版报告归纳的简化结构图，不是原图逐字复制，也不代表已验证全部节点。v3 的 OTT 双支是蓝本记录的本地实现；部署、历史回补和分区版本仍须分别举证，不能从本图推定。<strong>正文对账排除 OTT</strong>，简图保留该旁路只为交代整体结构。</li>
+</ul>
+<pre><code class="language-text">v3 非 OTT：swift_hub → fty → state_d ─┐
+v3 OTT：decdm di → state_d_ott ──────┤→ Stage2（180 天窗 + pair + rk≤500）→ v3 终表
+v2：服务端 tt ∪ 客户端 ut → video 明细层 → limit 层 → v2 终表
+</code></pre>
+<p>图中 v2/v3 仍可能有上游累计、跨 video 次序、快照时点、缺维表兜底、分发上限等差异或待解释项，不能把两线的全部差异归到 video 层。</p>
+<details class="fold">
+<summary>完整技术地图 · <span class="num">00</span> 的链路图、粒度、字段依赖及历史/在线旁支（背景，非本次已证）</summary>
+<h3>链路依赖图与聚合粒度</h3>
+<p>本文是手工重算的地图：表依赖 DAG、每阶段的输入/输出粒度（聚合键）、关键字段派生关系。每张表的 schema、抽样与取证注意见<span class="docref">表元数据（源地址：01_表元数据.md）</span>；每阶段独立重算公式与已知非确定点见<span class="docref">重算公式（源地址：02_重算公式.md）</span>。本地 SQL 正本在 <code>biz-odps-sql/播放日志oneid/</code>（在线为 <code>flink-sql/biz/playlog-v3-guard-spread/</code>），本文不拷贝 SQL。</p>
+<h4>离线主链按支路（<span class="num">2026</span>-<span class="num">09</span>-<span class="num">16</span> 起 v3 双支合并；state_d_ott 产出/部署状态见<span class="docref">表元数据（源地址：01_表元数据.md）</span> <span class="num">4</span>b 观察记录）</h4>
+<p>非 OTT 支路 <code>swift_hub→fty→state_d</code>（<span class="num">2026</span>-<span class="num">09</span>-<span class="num">11</span> 起消费 fty）；OTT 支路 <code>decdm di→state_d_ott</code> 见下节；pair→Stage2(v3) 消费双支 UNION。下图为非 OTT 支路：</p>
+<pre class="wide-map"><code class="language-text">  原始上报                      Stage0 清洗(零聚合)          Stage1 日聚合               映射(独立分支)              Stage2 交付
+┌─────────────────────┐   ┌──────────────────┐   ┌───────────────────┐
+│ yt_fty.swift_hub_   │   │ ytrec.playlog_   │   │ ytrec.playlog_    │
+│ log_playlog_detail_ │ ─▶│ video_base_fty   │ ─▶│ video_state_d     │──┐
+│ _tt                 │   │ (事件级明细)      │   │ (日rowkey状态)     │  │
+│ ds/hh/mm  LC=30     │   │ ds  LC=720       │   │ ds  LC=365        │  │
+└─────────────────────┘   └──────────────────┘   └───────────────────┘  │   ┌────────────────────────┐   ┌──────────────────────────┐
+        │                        ▲                                       ├──▶│ ytrec.one_person_all_  │──▶│ ytrec.playlog_oneid_     │
+        │               ┌─────────────────┐                               │   │ mapping_pair_v3        │   │ to_show_v3               │
+        │               │ ytcdm.dim_yt_vdo│  vdo→show (MAX_PT)            │   │ (pair三支)  ds  LC=30  │   │ (目标×来源×show×person)  │
+        │               │  site='youku'   │                               │   └────────────────────────┘   │ ds  LC=30                │
+        │               └─────────────────┘                               │            ▲                   └──────────────────────────┘
+        │                                                                 │            │                              │
+        │                       ┌──────────────────────────────────────────┤   ┌────────┴────────────┐               ▼
+        │                       │ ytsoku.llm_person_split_result_nd        │   │ ytcdm.tmp_yt_llm_   │        .done ─▶ 回流 ─▶ iGraph
+        │                       │ (人机关系, 写死ds=20260817, 三级分区)      │   │ psplit_ott_person_  │        (回流/在线汇合，本轮未验)
+        │                       └──────────────────────────────────────────┘   │ prob_show (MAX_PT)  │
+        │                                                                      └─────────────────────┘
+        ▼
+  Stage1 另用维表：ytrec.dim_fc_video_show_mapping (MAX_PT) —— vdo→show/zp 重定口径
+</code></pre>
+<p><strong>零聚合是带前提的实现事实</strong>：Stage0 一行源日志=一行输出，前提是 dim_yt_vdo 分区内 vdo_id 唯一；键重数&gt;<span class="num">1</span> 会放大事件行数，属离线链路闭环前置缺口。</p>
+<h4>OTT 旁路：decdm di → playlog_video_state_d_ott → playlog_oneid_to_show_v3 UNION ALL（<span class="num">2026</span>-<span class="num">09</span>-<span class="num">16</span> 本地实现；产出/部署状态见<span class="docref">表元数据（源地址：01_表元数据.md）</span> <span class="num">4</span>b 观察记录）</h4>
+<pre><code class="language-text">decdm.dwd_de_res_ott_play_di ──▶ ytrec.playlog_video_state_d_ott ──┐
+(ds+site_type，LC=36000)        (9列同state_d，source恒2，LC=365)   ├─▶ Stage2 L1 输入
+ytrec.playlog_video_state_d（仅非 OTT：source&lt;&gt;2 整窗排除）─────────┘   UNION ALL
+</code></pre>
+<ul>
+<li>Stage2 L1 入口改为双支合并：旧 state 非 OTT 支 ∪ state_d_ott OTT 支，两支各自做 <span class="num">180</span> 天 ds 上下界裁剪；<code>show_id&lt;&gt;'0'</code>、vst 窗口锚点、ts 入口钳制在合并后统一执行一次。</li>
+<li>旧 state 的 OTT 行（source=<span class="num">2</span>）整个 <span class="num">180</span> 天窗口排除（此前版本仅排除 ds&lt;<span class="num">20260813</span>）；旧 state 生产 SQL 不改，回滚 = 撤销 state_d_ott 支路并恢复 <span class="num">0813</span> 排除条件（git 历史可考）。</li>
+<li><strong>部署前提（不满足不得上线）</strong>：state_d_ott <span class="num">180</span> 天历史分区先回补完整 + 调度先于 Stage2；缺分区不回退混源（禁止），Stage2 SQL 不自动补历史。</li>
+<li>state_d_ott 过滤=A 侧业务口径（vdo_id 占位/ts&gt;<span class="num">0</span>/is_auto_play/playtrigger/resume_play_type/<span class="num">12003</span>/spm_id 场景）+ 本表额外收紧（uuid hex3<span class="num">2</span> + 默认 uuid 字面量排除）；取舍因果见 <span class="docref">note-ott换源A-B取舍（源地址：../notes/note-ott换源A-B取舍.md）</span>（含勘误）。</li>
+</ul>
+<h4>每阶段粒度与聚合键</h4>
+<div class="table-wrap" data-table="13"><p class="table-hint" data-n="13"><span class="hint-wide">宽表可在框内横向滚动；分母、样本范围与来源见相邻说明。</span><span class="hint-narrow">手机按字段逐条展示；分母、范围与来源见相邻说明。</span></p><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>输入粒度</th>
+<th>输出粒度（聚合键）</th>
+<th>输出行含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="cell-key" data-label="阶段">Stage0 fty</td>
+<td data-label="输入粒度"><span class="num">1</span> 条 hub 日志</td>
+<td data-label="输出粒度（聚合键）"><span class="num">1</span> 行事件（无 GROUP BY）</td>
+<td data-label="输出行含义">单次播放事件清洗+透传</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="阶段">Stage1 state_d</td>
+<td data-label="输入粒度">fty 事件行（当日单 ds）</td>
+<td data-label="输出粒度（聚合键）">规范化设备 + show_id + vdo_id</td>
+<td data-label="输出行含义">当日该 rowkey 的 MAX/快照状态</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="阶段">Stage1 state_d_ott（状态见 <span class="num">01</span> <span class="num">4</span>b 观察记录）</td>
+<td data-label="输入粒度">di 事件行（当日单 ds；A 业务过滤 + hex3<span class="num">2</span>/默认 uuid 收紧）</td>
+<td data-label="输出粒度（聚合键）">uuid + show_id + vdo_id</td>
+<td data-label="输出行含义">当日该 rowkey 的 MAX/快照状态（<span class="num">9</span> 列同 state_d，source 恒 <span class="num">2</span>）</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="阶段">pair</td>
+<td data-label="输入粒度">LLM 人机关系行（固定 <span class="num">20260817</span>）</td>
+<td data-label="输出粒度（聚合键）">pair_id = <code>设备_show</code>（三支）</td>
+<td data-label="输出行含义">设备+节目 → person 及其全部设备</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="阶段">Stage2 L1</td>
+<td data-label="输入粒度">state_d 非 OTT ∪ state_d_ott，各 <span class="num">180</span> 天（T-<span class="num">179</span>..T）</td>
+<td data-label="输出粒度（聚合键）">rowkey（设备_show_video）跨日归约</td>
+<td data-label="输出行含义">该 rowkey 全窗口 MAX/最新快照</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="阶段">Stage2 L2</td>
+<td data-label="输入粒度">L1 输出</td>
+<td data-label="输出粒度（聚合键）">来源设备 + show_id</td>
+<td data-label="输出行含义">该设备该 show 的 <span class="num">180</span>d 累计/<span class="num">30</span>d/最新快照</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="阶段">Stage2 输出</td>
+<td data-label="输入粒度">L2 × pair 命中</td>
+<td data-label="输出粒度（聚合键）">目标设备 × 来源设备 × show × person</td>
+<td data-label="输出行含义">单来源口径复制到目标设备，不跨来源求和</td>
+</tr>
+</tbody>
+</table></div>
+<h4>关键字段依赖边</h4>
+<div class="table-wrap" data-table="14"><p class="table-hint" data-n="14"><span class="hint-wide">宽表可在框内横向滚动；分母、样本范围与来源见相邻说明。</span><span class="hint-narrow">手机按字段逐条展示；分母、范围与来源见相邻说明。</span></p><table>
+<thead>
+<tr>
+<th>目标字段</th>
+<th>来源与派生规则</th>
+<th>阶段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="cell-key" data-label="目标字段">fty.utdid</td>
+<td data-label="来源与派生规则">hub.utdid 脏值清单（空/null/NULL/'utdid'/'Degrade'）→ 回退 hub.nlid</td>
+<td data-label="阶段">Stage0</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">fty.nlid</td>
+<td data-label="来源与派生规则">hub.nlid 同清单脏值 → 置 NULL</td>
+<td data-label="阶段">Stage0</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">fty.vst_time</td>
+<td data-label="来源与派生规则">hub.ut（<span class="num">10</span> 位秒）× <span class="num">1000</span> → <span class="num">13</span> 位 ms</td>
+<td data-label="阶段">Stage0</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">fty.ts</td>
+<td data-label="来源与派生规则">hub.playts 字面 'null'→<span class="num">0</span>，否则 CAST INT /<span class="num">1000</span>（毫秒→秒）</td>
+<td data-label="阶段">Stage0</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">fty.end_time</td>
+<td data-label="来源与派生规则">hub.po CAST INT /<span class="num">1000</span></td>
+<td data-label="阶段">Stage0</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">fty.show_id</td>
+<td data-label="来源与派生规则">dim_yt_vdo(site='youku') 按 vdo_id 等值 JOIN，miss→NULL</td>
+<td data-label="阶段">Stage0</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">fty 七透传列</td>
+<td data-label="来源与派生规则">utdidts/ytidts/playsessionid/shid/appversion/videotype/playersource，空串/'null'/'NULL'→NULL</td>
+<td data-label="阶段">Stage0</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">state_d.utdid</td>
+<td data-label="来源与派生规则">非 OTT=fty.utdid；OTT=fty.nlid（缺/脏→NULL→整行剔除，不回退 utdid）</td>
+<td data-label="阶段">Stage1</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">state_d.source</td>
+<td data-label="来源与派生规则">LOWER(device)：android/iphone→<span class="num">4</span>，ipad→<span class="num">3</span>，ott%→<span class="num">2</span>，iku→<span class="num">1</span>，else→<span class="num">0</span></td>
+<td data-label="阶段">Stage1</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">state_d.show_id/zp</td>
+<td data-label="来源与派生规则">dim_fc_video_show_mapping 重定口径；miss/非法→'<span class="num">0</span>'（短视频哨兵）</td>
+<td data-label="阶段">Stage1</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">state_d.ts</td>
+<td data-label="来源与派生规则">GREATEST(<span class="num">0</span>, LEAST(ts,<span class="num">86400</span>)) 逐行钳制后参与 MAX</td>
+<td data-label="阶段">Stage1</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">state_d_ott.utdid</td>
+<td data-label="来源与派生规则">di.uuid（hex3<span class="num">2</span> 收紧 + 默认 uuid 字面量排除；与 di.utdid 列抽样同值，恒等未证）</td>
+<td data-label="阶段">Stage1-ott</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">state_d_ott.vst_time</td>
+<td data-label="来源与派生规则">UNIX_TIMESTAMP(CAST(server_time AS DATETIME)) → <span class="num">10</span> 位秒（server_time 为 STRING，单参式 ODPS2 编译报错 ODPS-<span class="num">0130071</span>；双参格式在当前 odps-cli 查询模式实测报 ODPS-<span class="num">0121125</span> requires odps.sql.hive.compatible=true，被实测推翻——仅限该查询模式，不声明双参普遍不可用；常量实测 CAST DATETIME 式 = <span class="num">1761210966</span>，坏时间串行为未测）</td>
+<td data-label="阶段">Stage1-ott</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">state_d_ott.ts</td>
+<td data-label="来源与派生规则">GREATEST(<span class="num">0</span>, LEAST(ts,<span class="num">86400</span>))；源 ts 为秒</td>
+<td data-label="阶段">Stage1-ott</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">state_d_ott.end_time</td>
+<td data-label="来源与派生规则">事件级 COALESCE(CAST(COALESCE(KEYVALUE(args,',','=','endPos'),'<span class="num">0</span>') AS BIGINT)/<span class="num">1000</span>, ts) 原式透传，终值 ARG_MAX(vst_time,end_time)</td>
+<td data-label="阶段">Stage1-ott</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">state_d_ott.show_id/zp、source</td>
+<td data-label="来源与派生规则">维表口径同 state_d（miss/非法→'<span class="num">0</span>'）；source=常量 <span class="num">2</span></td>
+<td data-label="阶段">Stage1-ott</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">pair.hashcode</td>
+<td data-label="来源与派生规则">SUBSTR(MD5(pair_id), -<span class="num">4</span>)，与 Flink GetHashCodeUdf 对齐</td>
+<td data-label="阶段">pair</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">pair.pair_id</td>
+<td data-label="来源与派生规则">非 OTT：<code>设备_0</code>；OTT 精确：<code>设备_实际show</code>；OTT 兜底：<code>设备_0</code></td>
+<td data-label="阶段">pair</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">pair.sim_device_ids</td>
+<td data-label="来源与派生规则">person 名下全部设备逗号列表；兜底行=共享该设备的全部 person 设备并集</td>
+<td data-label="阶段">pair</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">输出.pkey/utdid</td>
+<td data-label="来源与派生规则">挂载目标设备</td>
+<td data-label="阶段">Stage2</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">输出.skey</td>
+<td data-label="来源与派生规则">CONCAT(sim_utdid,'_',show_id)；iGraph 真实 sk 用 show_id 字段本身</td>
+<td data-label="阶段">Stage2</td>
+</tr>
+<tr>
+<td class="cell-key" data-label="目标字段">输出.person/count</td>
+<td data-label="来源与派生规则">pair 两级命中行整组透传；双 miss→空串/<span class="num">0</span></td>
+<td data-label="阶段">Stage2</td>
+</tr>
+</tbody>
+</table></div>
+<h4>历史轨与在线支路（虚线，不在当前主链）</h4>
+<pre class="wide-map"><code class="language-text">历史轨（仅核 2026-09-11 前产出的分区）：
+  s_tt_playlog_all_end_tt4 ─▶ ytrec.playlog_video_base ─▶ state_d（源切fty前）
+  ytrec.playlog_video_state_nlid_backfill_d（回补快照，已废弃，仅核旧版本S产出分区）
+  ytrec.one_person_all_mapping_v3（旧mapping，离线/在线均已不消费，仅回滚基线）
+
+在线支路（本轮搁置）：
+  playlog_all_end(流) ─▶ parser ─▶ 15s窗口 ─▶ video/pair lookup ─▶ guard R1/R2 ─▶ spread ─▶ sink ─▶ converter ─▶ swift ─▶ 消费 ─▶ iGraph
+  公式与轨差见[在线支路](04_在线支路.md)
+</code></pre>
+<p>口径分界：state_d 的 ds&lt;<span class="num">20260813</span> 分区由旧 base 产出且不回刷（旧 OTT 口径）；<span class="num">2026</span>-<span class="num">09</span>-<span class="num">16</span> 起（本地实现，部署状态见 <span class="num">01</span> <span class="num">4</span>b 观察记录）Stage2 对 state_d 的 OTT 行（source=<span class="num">2</span>）整个 <span class="num">180</span> 天窗口排除，改由 state_d_ott 支路提供（见上节）。此前版本以 <code>ds&lt;20260813 AND source=2</code> 整行排除（窗口约 <span class="num">2027</span>-<span class="num">02</span>-<span class="num">09</span> 滚过后自然失效），中间版本（fc3ab6a，约半天）曾移除该排除，比对历史分区时按实例核对版本。</p>
+<blockquote>
+<p>v1 老表线（算法侧对比对象 <code>ytrec.playlog_oneid_to_show</code>）的地图与表元数据<strong>独立存放</strong>于 <span class="docref">v1version/00_v1链路依赖图.md（源地址：v1version/00_v1链路依赖图.md）</span>，与本文不打平、不混读。</p>
+<p>v2 线（<code>ytrec.playlog_oneid_to_show_v2</code>，<span class="num">2026</span>-<span class="num">08</span> 建表的第二代，与 v1 并存的算法侧对比对象）独立存放于 <span class="docref">v2version/00_v2链路依赖图.md（源地址：v2version/00_v2链路依赖图.md）</span>。v1 与 v2 的产出层/limit 层代码逐行同构，全部差异收敛在 video 层双源 merge；v2 与 v1 共用 sssvip 旁支与 mapping 表。</p>
+</blockquote>
+</details>
+<h3>A2. 证据范围语境</h3>
+<p>依据 <span class="num">03</span>：节点局部一致性不等于离线闭环，离线闭环不等于端到端或业务正确；实现一致也不等于业务正确。单分区证据不外推整个窗口，分区存在不证内容正确，镜像公式复现不算独立业务判据；结论只由同日期、同对象、同方法的证据闭合。这里说明阅读边界，不给本报告新判级。</p>
+<h3>A3. 来源地址（纯文本，可复制）</h3>
+<ul>
+<li>结论正本：<code>/Users/pengxiao/code/vibe/odps/.agents/skills/playlog-one-person-v3-check/references/v2version/case/v2v3覆盖差异终版报告.md</code></li>
+<li>链路背景：<code>/Users/pengxiao/code/vibe/odps/.agents/skills/playlog-one-person-v3-check/references/00_链路依赖图.md</code></li>
+<li>报告契约：<code>/Users/pengxiao/code/vibe/odps/.agents/skills/playlog-one-person-v3-check/references/03_验证契约与报告.md</code></li>
+</ul></section>
+</main>
+</div>
+</div>
+<footer class="document-footer"><span>技术台账 07 · 未发布</span><span>事实基线：同目录 report.md</span></footer>
+</body>
+</html>

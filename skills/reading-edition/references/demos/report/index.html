@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>技术报告 · 三个阅读版本</title>
+<style>
+:root{
+  --paper:#f3f1ea;--surface:#fdfcf8;--ink:#1f2426;--body:#3c4346;--muted:#6d7573;
+  --faint:#98a09b;--rule:#dcd8cc;--rule-soft:#ebe7dc;
+  --mono:"SFMono-Regular",Menlo,monospace;
+  --serif:"Songti SC","STSong",Georgia,serif;
+  --sans:"Avenir Next","PingFang SC",-apple-system,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.72 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{width:min(1080px,calc(100% - 64px));margin:0 auto}
+.top{border-bottom:1px solid var(--rule);padding:18px 0 14px}
+.top .wrap{display:flex;justify-content:space-between;align-items:baseline;gap:18px;font:10.5px/1.5 var(--mono);letter-spacing:.13em;color:var(--muted);text-transform:uppercase}
+.top b{color:var(--ink);font-weight:600;letter-spacing:.12em}
+.intro{padding:46px 0 32px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:52px;align-items:end}
+.intro h1{font:600 clamp(32px,3.8vw,48px)/1.18 var(--serif);letter-spacing:-.02em;margin:0 0 14px}
+.intro h1 em{font-style:normal;color:#9c5a33}
+.intro .lede{margin:0;font-size:14.5px;line-height:1.9;color:var(--body);max-width:56ch}
+.meta{border-top:2px solid var(--ink);padding-top:12px;display:grid;gap:8px;font-size:12.5px;line-height:1.7;color:var(--body)}
+.meta div{display:grid;grid-template-columns:72px minmax(0,1fr);gap:12px}
+.meta dt{font:10px/1.9 var(--mono);letter-spacing:.1em;color:var(--faint);text-transform:uppercase}
+.meta dd{margin:0}
+.cases{border-top:1px solid var(--rule)}
+.case{display:grid;grid-template-columns:196px minmax(0,1fr);gap:34px;padding:32px 0;border-bottom:1px solid var(--rule)}
+.rail{min-width:0}
+.idx{display:flex;align-items:baseline;gap:9px;border-top:2px solid var(--accent);padding-top:9px}
+.num{font:600 15px/1 var(--mono);color:var(--accent);letter-spacing:.04em}
+.latin{font:9.5px/1.5 var(--mono);letter-spacing:.11em;color:var(--faint);text-transform:uppercase}
+.case h2{font:600 24px/1.35 var(--serif);margin:10px 0 8px;letter-spacing:-.01em}
+.path{margin:0;font-size:12.5px;line-height:1.8;color:var(--body)}
+.body{min-width:0}
+.body p{margin:0 0 14px;font-size:14px;line-height:1.9;color:var(--body);max-width:62ch}
+.facts{margin:0 0 16px;display:grid;gap:10px}
+.facts div{display:grid;grid-template-columns:64px minmax(0,1fr);gap:14px;align-items:baseline}
+.facts dt{font:9.5px/1.7 var(--mono);letter-spacing:.1em;color:var(--faint);text-transform:uppercase}
+.facts dd{margin:0;font-size:12.8px;line-height:1.8;color:var(--body)}
+.open{display:inline-block;font:600 11.5px/1.5 var(--sans);color:var(--accent);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px}
+.note{border:1px solid var(--rule);background:var(--surface);padding:20px 22px;margin:30px 0 0;display:grid;grid-template-columns:118px minmax(0,1fr);gap:22px;font-size:12.8px;line-height:1.85;color:var(--body)}
+.note b{font:600 10px/1.9 var(--mono);letter-spacing:.12em;color:#9c5a33;text-transform:uppercase}
+.note p{margin:0}
+.note p+p{margin-top:8px}
+footer{border-top:1px solid var(--rule);margin-top:34px;padding:18px 0 44px;font-size:11.5px;line-height:1.8;color:var(--muted)}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+@media(max-width:860px){
+  .wrap{width:calc(100% - 40px)}
+  .intro{grid-template-columns:1fr;gap:26px;padding:34px 0 26px}
+  .case{grid-template-columns:1fr;gap:14px;padding:26px 0}
+  .idx{padding-bottom:6px}
+  .case h2{margin:8px 0 6px}
+  .note{grid-template-columns:1fr;gap:6px}
+}
+@media(max-width:520px){
+  .wrap{width:calc(100% - 34px)}
+  .top .wrap{display:block;line-height:1.9}
+  .top .wrap span{display:block}
+  .facts div{grid-template-columns:1fr;gap:2px}
+  footer{font-size:11px}
+}
+@media print{
+  body{background:#fff}
+  .note{break-inside:avoid}
+  .case{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><b>技术报告阅读版</b><span>READING EDITION · THREE APPROACHES</span></div>
+
+  <header class="intro">
+    <div>
+      <h1>同一份报告，<em>三种读法。</em></h1>
+      <p class="lede">播放日志覆盖差异报告的三版成品：结论与口径一致，差别在读的人如何进入正文、如何回查证据。</p>
+    </div>
+    <dl class="meta">
+      <div><dt>源文件</dt><dd>playlog-coverage.md</dd></div>
+      <div><dt>共同内容</dt><dd>14 张表 · 9 组折叠证据 · 4 段链路图</dd></div>
+      <div><dt>性质</dt><dd>静态示例，非模板</dd></div>
+    </dl>
+  </header>
+
+  <main class="cases">
+    <article class="case" style="--accent:#9c5a33">
+      <div class="rail">
+        <div class="idx"><span class="num">01</span><span class="latin">Archive</span></div>
+        <h2>档案总册</h2>
+        <p class="path">首屏结论数字带 → 完整索引 → 总账 → 逐章回查</p>
+      </div>
+      <div class="body">
+        <p>大标题、档案编号与结论数字带先把规模钉在首屏，完整索引横向铺开，读者可以从任意章节进入并对照右侧证据。</p>
+        <dl class="facts">
+          <div><dt>观察点</dt><dd>首屏如何在不展开细节的前提下交代结论与范围</dd></div>
+          <div><dt>适合</dt><dd>核查、引用与逐条确认</dd></div>
+        </dl>
+        <a class="open" href="playlog-coverage-archive.html">打开阅读版 →</a>
+      </div>
+    </article>
+
+    <article class="case" style="--accent:#2f5d50">
+      <div class="rail">
+        <div class="idx"><span class="num">02</span><span class="latin">Dossier</span></div>
+        <h2>研究档案</h2>
+        <p class="path">核心判断 → 目录定位 → 连续正文 → 按需查证</p>
+      </div>
+      <div class="body">
+        <p>纸面整体居中，正文、表格与框线收在同一有效宽度，长段落可以顺着读下去；证据收进折叠，需要时再展开。</p>
+        <dl class="facts">
+          <div><dt>观察点</dt><dd>正文行宽、行距与表格宽度如何互不干扰</dd></div>
+          <div><dt>适合</dt><dd>首次通读与向他人解释差异来源</dd></div>
+        </dl>
+        <a class="open" href="playlog-coverage-dossier.html">打开阅读版 →</a>
+      </div>
+    </article>
+
+    <article class="case" style="--accent:#1f5d63">
+      <div class="rail">
+        <div class="idx"><span class="num">03</span><span class="latin">Ledger</span></div>
+        <h2>技术台账</h2>
+        <p class="path">核对摘要 → 章节定位 → 字段、分母与来源逐项核对</p>
+      </div>
+      <div class="body">
+        <p>四格摘要压住首屏，常驻索引保留二级入口；正文限宽、表格留出原始宽度，方便反复比对同一组数字。</p>
+        <dl class="facts">
+          <div><dt>观察点</dt><dd>密集表格与长字段在窄屏下的降级方式</dd></div>
+          <div><dt>适合</dt><dd>复核数据与反复定位证据</dd></div>
+        </dl>
+        <a class="open" href="playlog-coverage-ledger.html">打开阅读版 →</a>
+      </div>
+    </article>
+  </main>
+
+  <div class="note">
+    <b>阅读提示</b>
+    <div>
+      <p>三版是参考，不是必须遵循的样式。配色、字体、栏数、目录形态与折叠位置都可以按文档内容重新决定；照搬版式而改变事实、口径或证据范围则是错误用法。</p>
+      <p>它们同时是质量底线：首屏可读结论、事实零丢失、折叠展开后完整、导航可跳转、窄屏不整页溢出、单文件自包含。</p>
+    </div>
+  </div>
+
+  <footer>
+    <span>事实基线：playlog-coverage.md</span>
+    <span>STATIC EDITION · NO EXTERNAL DEPENDENCIES</span>
+  </footer>
+</div>
+</body>
+</html>

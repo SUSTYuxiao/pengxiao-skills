@@ -30,9 +30,11 @@ reader-first 的前置研究结论（问题定义、证据来源与强度、候�
 
 | 示例 | 说明 |
 |---|---|
-| [reading-edition/references/demos/travel](skills/reading-edition/references/demos/travel/index.html) | 团队秋季出行的三个静态阅读版（C / F / G），用于观察信息层级、留白、导航与响应式处理；不是模板或规范来源 |
+| [reading-edition/references/demos](skills/reading-edition/references/demos/README.md) | 示例总览：按源文类型分组的静态阅读版，先用来说明它们只是参考与质量底线，不是模板 |
+| [travel](skills/reading-edition/references/demos/travel/index.html) | 团队秋季出行的三个静态阅读版（C / F / G），轻量图文与海报式信息组织 |
+| [report](skills/reading-edition/references/demos/report/index.html) | 技术数据报告的三版阅读版（档案总册 / 研究档案 / 技术台账），长文、密集表格与证据回查 |
 
-示例是静态展示，不是实时报价或可下单页面；它位于 `reading-edition` skill 内，会随 `pskills sync` 一起拷贝。
+示例是静态展示，不是实时报价或可下单页面，也不要求严格按样式复刻；它们位于 `reading-edition` skill 内，会随 `pskills sync` 一起拷贝。
 
 ## 引入模式
 
