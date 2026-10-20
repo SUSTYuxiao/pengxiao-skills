@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>秋日团建 · 三个阅读版本</title>
+<style>
+:root{
+  --paper:#f4efe4;--paper-2:#ebe3d3;--ink:#19312f;--muted:#65726c;
+  --line:#c9c0ae;--sea:#1f5f5c;--coral:#d2684e;--sun:#e8b85e;
+  --serif:"Songti SC","Noto Serif CJK SC","Source Han Serif SC",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:radial-gradient(900px 420px at 85% -10%,#f9f3e5 0,rgba(249,243,229,0) 65%),var(--paper);color:var(--ink);font:15px/1.7 var(--sans)}
+.page{max-width:1120px;margin:0 auto;padding:28px 38px 54px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid var(--ink);padding-bottom:16px;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.top b{display:flex;align-items:center;gap:10px;font-size:15px;letter-spacing:.04em;text-transform:none}
+.top b::before{content:"";width:13px;height:13px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 5px var(--paper),0 0 0 6px var(--ink)}
+.hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.6fr);gap:40px;align-items:end;padding:55px 0 42px}
+.kicker{margin:0 0 16px;color:var(--coral);font-size:11px;font-weight:750;letter-spacing:.18em}
+h1{max-width:720px;margin:0;font:700 clamp(38px,5.4vw,64px)/1.18 var(--serif);letter-spacing:-.035em}
+h1 em{font-style:normal;color:var(--sea);position:relative;white-space:nowrap}
+h1 em::after{content:"";position:absolute;left:0;right:-6px;bottom:2px;height:8px;background:var(--sun);z-index:-1;transform:rotate(-1deg)}
+.summary{margin:0;padding:0 0 5px 22px;border-left:3px solid var(--coral);color:var(--muted);font-size:13px;line-height:1.95}
+.summary strong{color:var(--ink)}
+.meta{display:flex;flex-wrap:wrap;gap:8px 20px;border-block:1px solid var(--line);padding:14px 0;margin:0 0 34px;color:var(--muted);font-size:12px}
+.meta span{display:flex;align-items:center;gap:7px}
+.meta span::before{content:"";width:5px;height:5px;background:var(--sea);border-radius:50%}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;margin:0 0 14px}
+.section-head h2{margin:0;font:700 24px/1.4 var(--serif)}
+.section-head p{margin:0;color:var(--muted);font-size:12px}
+.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.choice{display:flex;min-height:330px;flex-direction:column;border:1px solid var(--line);background:#fbf8f0;padding:22px 22px 20px;position:relative;overflow:hidden;transition:transform .18s ease,box-shadow .18s ease}
+.choice::before{content:"";position:absolute;inset:0 0 auto;height:6px;background:var(--accent)}
+.choice:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(25,49,47,.09)}
+.num{font:italic 15px/1 Georgia,serif;color:var(--accent);margin:7px 0 42px}
+.choice h3{margin:0;font:700 28px/1.3 var(--serif);letter-spacing:-.02em}
+.tag{margin:7px 0 18px;color:var(--muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.desc{margin:0 0 18px;font-size:13px;line-height:1.85;color:#3e504c}
+.best{margin:auto 0 20px;padding-top:15px;border-top:1px solid var(--line);font-size:12px;line-height:1.75}
+.best b{display:block;margin-bottom:3px;color:var(--accent);font-size:10px;letter-spacing:.1em}
+.open{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--ink);padding:10px 12px;color:var(--ink);font-size:12px;font-weight:700;text-decoration:none}
+.open span{font-size:17px;line-height:1;transition:transform .18s ease}
+.open:hover{background:var(--ink);color:var(--paper)}
+.open:hover span{transform:translateX(4px)}
+.choice.c{--accent:#2d868d}
+.choice.f{--accent:#788c66}
+.choice.g{--accent:#c64d35}
+.note{display:grid;grid-template-columns:96px minmax(0,1fr);gap:18px;margin-top:28px;padding:18px 0 0;border-top:1px dashed var(--line);color:var(--muted);font-size:11.5px;line-height:1.85}
+.note b{color:var(--ink);font-size:10px;letter-spacing:.12em}
+footer{display:flex;justify-content:space-between;gap:20px;margin-top:46px;padding-top:15px;border-top:1px solid var(--ink);color:var(--muted);font-size:10px;letter-spacing:.07em}
+@media(max-width:840px){
+  .page{padding:22px 22px 40px}
+  .top>span:last-child{display:none}
+  .hero{grid-template-columns:1fr;gap:22px;padding:38px 0 30px}
+  .summary{max-width:620px}
+  .choices{grid-template-columns:1fr}
+  .choice{min-height:0}
+  .num{margin-bottom:28px}
+}
+@media(max-width:480px){
+  .page{padding-inline:17px}
+  h1{font-size:37px}
+  .section-head{display:block}
+  .section-head p{margin-top:4px}
+  .note{grid-template-columns:1fr;gap:4px}
+  footer{display:block;line-height:1.9}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top"><b>秋季团建提案</b><span>TEAM OUTING / AUTUMN 2026</span></div>
+
+  <header class="hero">
+    <div>
+      <p class="kicker">THREE WAYS TO READ</p>
+      <h1>同一份方案，<br><em>三种打开方式。</em></h1>
+    </div>
+    <p class="summary"><strong>北京出发，四天以内。</strong>从京郊温泉到东南亚海岛，四个选项都按 20 人双住测算。先看气质，再读行程与预算。</p>
+  </header>
+
+  <div class="meta">
+    <span>2026 年 10 月下旬至 11 月上旬</span>
+    <span>北京出发</span>
+    <span>远途最多 4 个自然日</span>
+    <span>20 名成人 / 10 间双床房</span>
+  </div>
+
+  <div class="section-head">
+    <h2>选择阅读版本</h2>
+    <p>内容一致，视觉方向不同。</p>
+  </div>
+
+  <main class="choices">
+    <article class="choice c">
+      <div class="num">01 / C</div>
+      <h3>海岛明信片</h3>
+      <p class="tag">POSTCARD / LIGHT &amp; AIRY</p>
+      <p class="desc">浅天蓝、奶油白与珊瑚落日。棕榈、海浪和邮戳把度假感放在最前面，读起来轻快明亮。</p>
+      <p class="best"><b>适合</b>想先感受海风与假期氛围，再进入具体安排。</p>
+      <a class="open" href="team-outing-options-c.html">打开阅读版 <span>→</span></a>
+    </article>
+
+    <article class="choice f">
+      <div class="num">02 / F</div>
+      <h3>慢游画报</h3>
+      <p class="tag">SLOW JOURNAL / SOFT &amp; CALM</p>
+      <p class="desc">鼠尾草绿、桃粉、拱窗风景与植物剪纸。节奏更慢，像一本适合周末翻开的旅行画报。</p>
+      <p class="best"><b>适合</b>偏好安静、松弛和编辑感排版的人。</p>
+      <a class="open" href="team-outing-options-f.html">打开阅读版 <span>→</span></a>
+    </article>
+
+    <article class="choice g">
+      <div class="num">03 / G</div>
+      <h3>复古旅行海报</h3>
+      <p class="tag">VINTAGE POSTER / BOLD &amp; GRAPHIC</p>
+      <p class="desc">黄油黄、海军蓝与番茄红，海湾窗景配丝网印刷质感。信息更有海报的力量感与节奏。</p>
+      <p class="best"><b>适合</b>希望方案一眼鲜明、有团队活动召集感。</p>
+      <a class="open" href="team-outing-options-g.html">打开阅读版 <span>→</span></a>
+    </article>
+  </main>
+
+  <div class="note">
+    <b>阅读提示</b>
+    <span>预算为规划测算，包含基础费用与应急，不是实时机票、酒店库存或可下单报价；实际以指定日期的正式询价为准。</span>
+  </div>
+
+  <footer><span>事实基线：team-outing-options.md</span><span>STATIC EDITION · NO EXTERNAL DEPENDENCIES</span></footer>
+</div>
+</body>
+</html>

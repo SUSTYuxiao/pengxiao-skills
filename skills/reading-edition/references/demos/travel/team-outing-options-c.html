@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>团队 Outing 四方案 · 顺义温泉、厦门、富国岛与普吉岛 · C / 海岛明信片</title>
+<style>
+:root{--sky:#c7eaf1;--ocean:#286169;--deep:#183f46;--coral:#e96c55;--cream:#fff9e9;--paper:#fffcf3;--line:#c7d9d4;--muted:#617677;--light:#edf5f2;--sans:"Avenir Next","Hiragino Maru Gothic ProN","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;--mono:ui-monospace,SFMono-Regular,Consolas,monospace}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:25px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--cream);color:var(--deep);font:15px/1.9 var(--sans)}
+.doc{max-width:1200px;margin:0 auto;padding:0 42px 65px;position:relative;isolation:isolate}
+.doc::before{content:"";position:absolute;inset:0 calc((1200px - 100vw)/2) auto;min-width:100%;height:690px;z-index:-1;background:radial-gradient(ellipse at 15% 20%,#e1f5f5 0,transparent 50%),var(--sky);border-radius:0 0 50% 12% / 0 0 8% 4%;pointer-events:none}
+.brandbar{display:flex;align-items:center;justify-content:space-between;padding:26px 0 8px;font-size:11px;letter-spacing:.14em;font-weight:750}
+.brandbar b{display:flex;align-items:center;gap:9px;font-size:15px;letter-spacing:.03em}
+.brandbar b::before{content:"";width:18px;height:18px;border:2px solid var(--ocean);border-radius:50%;box-shadow:0 0 0 4px #c7eaf1,0 0 0 5px #286169}
+.brandbar>span{font-size:10px}
+.hero{padding:30px 0 21px;position:relative;display:grid;grid-template-columns:1fr 1.05fr;gap:20px 35px;align-items:center}
+.hero h1{margin:0;max-width:510px;font-size:13px;line-height:1.8;font-weight:600;letter-spacing:.02em;align-self:center}
+.invitation{display:block;font-size:clamp(48px,5.7vw,74px);font-weight:850;line-height:1.22;letter-spacing:-.05em;margin:0 0 23px}
+.invitation em{font-style:normal;color:var(--ocean);position:relative}
+.invitation em::after{content:"";position:absolute;bottom:-2px;left:4px;right:-10px;height:12px;border-bottom:5px solid var(--coral);border-radius:50%;transform:rotate(-4deg)}
+.source-title{display:block;max-width:365px;font-size:12px;color:var(--ocean)}
+.source-subtitle{display:block;font-size:11px;margin-top:3px}.destination-word{white-space:nowrap}
+.postcard-art{min-width:0;height:345px;position:relative;margin:8px -3px 0 0}
+.postcard-back{position:absolute;inset:20px 13px 18px 12px;border-radius:9px;background:#f1a58e;transform:rotate(6deg);box-shadow:0 15px 35px #28616912}
+.postcard-front{position:absolute;inset:8px 8px 16px;background:var(--paper);border:12px solid var(--paper);border-bottom-width:4px;transform:rotate(-4deg);box-shadow:0 20px 30px #28616922;border-radius:7px;overflow:hidden}
+.postcard-front>svg{width:100%;height:calc(100% - 31px);display:block;object-fit:cover}
+.postcard-caption{display:flex;justify-content:space-between;align-items:center;height:31px;color:var(--ocean);font-size:9px;letter-spacing:.15em;font-weight:700;padding:2px 6px 0}
+.postcard-caption span:last-child{font-size:22px;line-height:1;letter-spacing:0}
+.postmark{position:absolute;right:-10px;top:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;width:103px;height:103px;transform:rotate(14deg);border:2px solid var(--coral);outline:1px solid var(--coral);outline-offset:-8px;border-radius:50%;background:#fff8e6df;color:#b84d39;font-size:7px;font-weight:700;letter-spacing:.06em;line-height:1.8}
+.postmark strong{font-size:16px;font-weight:750;letter-spacing:.04em;line-height:1.8}
+.postcard-flight{position:absolute;width:155px;height:70px;bottom:-18px;left:-95px}
+.hero-copy{grid-column:1/-1;display:grid;grid-template-columns:1fr 205px;gap:26px;align-items:center;border-top:1px solid #28616933;margin-top:20px;padding-top:18px;color:var(--ocean)}
+.hero-copy>p{font-size:12px;line-height:1.9;margin:0}
+.hero-copy>p:last-child{border-left:1px solid #28616933;padding-left:23px;font-size:11px;color:var(--muted)}
+.sec{min-width:0}
+.doc>.sec{margin-top:44px}
+h2{font-size:28px;line-height:1.4;letter-spacing:-.025em;font-weight:800;margin:0 0 23px}
+h3{font-size:24px;line-height:1.5;margin:23px 0 17px}
+h4{font-size:19px;line-height:1.6;margin:30px 0 13px}
+p{margin:12px 0}
+ul,ol{margin:12px 0;padding-left:23px}
+li{margin:6px 0}
+strong{font-weight:750}
+a{color:var(--ocean);text-underline-offset:4px}
+code{font: .87em var(--mono);background:var(--light);border-radius:5px;padding:2px 5px;overflow-wrap:anywhere}
+blockquote{border-left:4px solid var(--coral);margin:21px 0;padding:4px 20px;background:#fff3df;border-radius:0 15px 15px 0}
+hr{border:0;border-top:1px dashed var(--line);margin:24px 0}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin:24px 0;background:var(--paper);border-radius:20px;box-shadow:0 12px 35px #345b5110;position:relative;padding:26px 10px 24px;counter-reset:destination}
+.cards::before,.cards::after{content:"";position:absolute;top:48%;width:18px;height:36px;background:var(--cream)}
+.cards::before{left:0;border-radius:0 50px 50px 0}.cards::after{right:0;border-radius:50px 0 0 50px}
+.card{min-width:0;border-left:1px dashed #9dbdb6;padding:5px 21px;display:flex;flex-direction:column;gap:10px;position:relative;counter-increment:destination}
+.card:first-child{border-left:0}
+.card::before{content:counter(destination,decimal-leading-zero);color:var(--coral);font-size:11px;font-weight:800;letter-spacing:.1em;line-height:1;margin-bottom:3px}
+.card h4{font-size:20px;margin:0 0 2px;line-height:1.3;font-weight:800;letter-spacing:-.02em}
+.kv .k{display:block;font-size:10px;color:var(--muted);letter-spacing:.04em;line-height:1.6;margin-bottom:4px}
+.kv .v{display:block;font-size:12px;line-height:1.8;font-weight:550}
+.card>.kv:nth-of-type(1){order:1}
+.card>.kv:nth-of-type(1) .k{display:none}
+.card>.kv:nth-of-type(1) .v{font-size:11px;color:var(--muted)}
+.card>.kv:nth-of-type(2){order:0;margin:3px 0}
+.card .money{font-size:32px;line-height:1.2;letter-spacing:-.06em;font-weight:800;color:var(--ocean)}
+.card>.kv:nth-of-type(2) .k{font-size:9px;margin-bottom:7px}
+.card>.kv:nth-of-type(3){order:2}
+.card>.tag{order:3;font-size:11px;line-height:1.8;color:var(--ocean);margin:0;padding-top:8px;border-top:1px solid var(--line)}
+.tag-k{font-weight:700;margin-right:5px}.tag-k::after{content:"："}
+.card>.kv:last-child{order:4;margin-top:3px}
+.card>.kv:last-child .v{font-size:10px;color:var(--muted);line-height:1.8;font-weight:400}
+.cards+p{font-size:12px;color:var(--muted);padding:0 8px}
+.doc>.sec:nth-of-type(2){padding:32px 35px 25px;border-radius:32px 9px 32px 9px;background:#e7f0e9;position:relative;margin-top:38px}
+.doc>.sec:nth-of-type(2)::before{content:"";position:absolute;right:35px;top:-12px;width:84px;height:25px;background:#f2bca4bb;transform:rotate(6deg)}
+.doc>.sec:nth-of-type(2)>h2{font-size:25px}
+.doc>.sec:nth-of-type(2)>p:first-of-type{font-size:16px;line-height:1.85;max-width:930px}
+.doc>.sec:nth-of-type(2)>ul{display:grid;grid-template-columns:1fr 1fr;gap:21px 35px;padding:0;list-style:none;margin:24px 0 20px}
+.doc>.sec:nth-of-type(2)>ul>li{font-size:12px;margin:0;padding-left:16px;border-left:3px solid #80aaa3}
+.doc>.sec:nth-of-type(2)>ul>li>strong{display:block;font-size:15px;margin-bottom:5px;line-height:1.7}
+.doc>.sec:nth-of-type(2)>p:not(:first-of-type){font-size:11px;color:var(--muted)}
+.destination-tabs{position:relative;min-inline-size:0;border:0;padding:0;margin:0}
+.destination-tabs>legend{font-size:12px;color:var(--muted);padding:0 0 12px}
+.destination-choice{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.destination-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:24px}
+.destination-nav label{cursor:pointer;background:var(--paper);border:1px solid var(--line);border-radius:100px;padding:13px 15px;font-size:16px;font-weight:750;text-align:center;white-space:nowrap;transition:transform .18s ease,background .18s ease,color .18s ease}
+.destination-nav label:hover{transform:translateY(-3px);background:#dff0ed}
+.destination-panels{border:1px solid #d1ded5;background:var(--paper);border-radius:24px;padding:35px 36px 30px;box-shadow:0 10px 28px #365b5110}
+.destination-panel{display:none}
+.destination-panel>h3{font-size:clamp(27px,3.1vw,34px);line-height:1.42;letter-spacing:-.035em;margin:0 0 18px;text-wrap:balance;overflow-wrap:normal;word-break:keep-all}
+.destination-heading-main{display:block;white-space:nowrap}.destination-heading-sub{display:block;font-size:14px;line-height:1.75;letter-spacing:0;font-weight:550;color:var(--muted);margin-top:6px}
+.destination-panel>p:first-of-type{font-size:15px;line-height:1.9;margin:0 0 21px}
+.destination-panel>p:has(+ul){font-size:12px;color:var(--ocean);margin-bottom:9px}
+.destination-panel>ul{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;list-style:none;padding:0;margin:8px 0 26px}
+.destination-panel>ul>li{font-size:12px;background:var(--light);border-radius:12px;padding:13px 15px;margin:0;line-height:1.85}
+.destination-panel>h4{padding-top:20px;border-top:1px dashed var(--line);margin-top:31px}
+.destination-panel>p{font-size:13px}
+.day{position:relative;display:grid;grid-template-columns:180px minmax(0,1fr);gap:26px;padding:21px 0;border-bottom:1px dashed var(--line)}
+.day h5{font-size:15px;line-height:1.75;font-weight:750;margin:0;color:var(--ocean);padding:12px 13px;border-radius:12px 12px 12px 2px;background:#e2f2f2;align-self:start}
+.day ul{margin:0;padding-left:18px;font-size:14px;line-height:1.9}
+.day li{margin:0 0 8px}.day li:last-child{margin-bottom:0}
+.table-wrap{overflow:auto;-webkit-overflow-scrolling:touch;margin:21px 0;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
+table{width:100%;min-width:600px;border-collapse:collapse;font-size:12px;line-height:1.9}
+th,td{padding:12px 15px;vertical-align:top;text-align:left;border-bottom:1px solid #dbe5df}
+th{font-size:11px;font-weight:700;background:var(--light);white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+.budget-table{min-width:0;table-layout:fixed}
+.budget-table th:first-child{width:25%}.budget-table th:nth-child(2){width:15%}
+.budget-table td:nth-child(2){font-size:18px;font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:-.035em}
+.budget-total{background:#fff0de}.budget-total td:first-child{color:#99442f}.budget-total td:nth-child(2){color:#b95039;font-size:24px}
+details.fold{margin:22px 0;border:1px solid var(--line);border-radius:14px;background:#f2f6ef}
+details.fold>summary{cursor:pointer;list-style:none;font-size:13px;font-weight:650;position:relative;padding:15px 46px 15px 18px;line-height:1.75}
+summary::-webkit-details-marker{display:none}summary::marker{content:""}
+details.fold>summary::after{content:"+";position:absolute;right:17px;top:12px;font-size:22px;line-height:1.5;color:var(--ocean);font-weight:400}
+details.fold[open]>summary::after{content:"−"}
+details.fold[open]>summary{border-bottom:1px solid var(--line)}
+summary .hint{display:none}
+.fold-body{padding:9px 20px 18px;font-size:12px;overflow-wrap:anywhere}
+.fold-body h3{font-size:20px}.fold-body h4{font-size:16px;margin-top:21px}
+.doc>.sec:nth-last-of-type(-n+2){margin-top:35px;padding-top:24px;border-top:1px dashed #aec7be}
+.doc>.sec:nth-last-of-type(-n+2)>h2{font-size:22px}
+.doc>.sec:nth-last-of-type(-n+2)>p{font-size:12px;color:var(--muted)}
+label:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--coral);outline-offset:4px}
+::selection{background:#f5b7a0;color:var(--deep)}
+@media(prefers-reduced-motion:no-preference){.hero h1{animation:arrival .6s ease-out both}.postcard-art{animation:arrival .8s .08s ease-out both}@keyframes arrival{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:none}}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+@media(min-width:1200px){.doc::before{left:calc((1200px - 100vw)/2);right:calc((1200px - 100vw)/2)}}
+@media(max-width:1199px){.doc::before{left:0;right:0;border-radius:0 0 45% 8% / 0 0 5% 3%}.doc{padding-left:34px;padding-right:34px}.postcard-art{height:315px}.invitation{font-size:62px}.card{padding:5px 17px}.card h4{font-size:18px}.card .money{font-size:29px}}
+@media(max-width:850px){.hero{gap:20px}.invitation{font-size:52px}.postcard-art{height:270px}.postmark{width:85px;height:85px;right:-5px;font-size:6px}.postmark strong{font-size:13px}.postcard-flight{width:110px;left:-65px;bottom:-14px}.hero-copy{grid-template-columns:1fr 160px;gap:17px}.hero-copy>p:last-child{padding-left:17px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));padding:8px 16px}.card{padding:22px}.card:nth-child(odd){border-left:0}.card:nth-child(-n+2){border-bottom:1px dashed var(--line)}.card .money{font-size:33px}.card h4{font-size:21px}.cards::before,.cards::after{display:none}.destination-panel>ul{grid-template-columns:1fr;gap:9px}.destination-panel>ul>li{padding:11px 14px}.destination-panels{padding:28px}.day{grid-template-columns:150px minmax(0,1fr);gap:21px}}
+@media(max-width:600px){
+ .doc{padding:0 20px 45px}.doc::before{height:820px;border-radius:0 0 50% 12% / 0 0 3% 2%}.brandbar{padding:22px 0 3px;font-size:9px}.brandbar b{font-size:12px}.brandbar>span{font-size:8px;letter-spacing:.06em}.brandbar b::before{width:13px;height:13px;box-shadow:0 0 0 3px #c7eaf1,0 0 0 4px #286169}
+ .hero{grid-template-columns:1fr;padding-top:20px;gap:0}.hero h1{font-size:12px}.invitation{font-size:51px;line-height:1.18;letter-spacing:-.045em;margin-bottom:15px}.invitation br{display:none}.invitation em{display:block}.source-title{font-size:11px;max-width:310px}.postcard-art{height:258px;margin:23px 7px 9px}.postcard-back{inset:18px 9px 18px 12px}.postcard-front{inset:8px 8px 16px;border-width:9px;border-bottom-width:3px}.postmark{width:82px;height:82px;right:-8px;top:1px}.postcard-caption{font-size:7px;letter-spacing:.1em}.postcard-flight{width:90px;height:50px;left:-12px;bottom:-21px;transform:rotate(-12deg)}
+ .hero-copy{display:block;margin-top:17px;padding-top:15px}.hero-copy>p{font-size:11px;line-height:1.9}.hero-copy>p:last-child{border-left:0;padding:0;margin-top:10px;font-size:10px}.doc>.sec{margin-top:31px}h2{font-size:23px;margin-bottom:18px}
+ .cards{grid-template-columns:1fr;border-radius:18px;padding:0 20px;margin:21px 0}.card{display:grid;grid-template-columns:minmax(0,1fr) 112px;grid-template-rows:auto auto auto auto auto;padding:22px 0;gap:8px 15px;border-left:0!important;border-bottom:1px dashed var(--line);position:relative}.card:last-child{border-bottom:0}.card::before{position:absolute;right:0;top:15px;font-size:9px;opacity:.7}.card h4{grid-column:1;grid-row:1;align-self:end;font-size:21px;padding-top:8px}.card>.kv:nth-of-type(1){grid-column:1;grid-row:2}.card>.kv:nth-of-type(2){grid-column:2;grid-row:1/3;text-align:right;align-self:center;padding-top:6px;margin:0}.card>.kv:nth-of-type(2) .k{font-size:8px}.card .money{font-size:28px;white-space:nowrap}.card>.kv:nth-of-type(3){grid-column:1/-1;grid-row:3}.card>.kv:nth-of-type(3) .k{display:none}.card>.tag{grid-column:1/-1;grid-row:4;font-size:11px;border-top:0;padding-top:0}.card>.kv:last-child{grid-column:1/-1;grid-row:5;margin-top:0}.card>.kv:last-child .k{display:inline;margin-right:6px;font-size:9px}.card>.kv:last-child .v{display:inline;font-size:10px}.cards+p{font-size:11px;padding:0}
+ .doc>.sec:nth-of-type(2){padding:24px 20px 19px;border-radius:23px 7px 23px 7px;margin-top:30px}.doc>.sec:nth-of-type(2)>h2{font-size:22px}.doc>.sec:nth-of-type(2)>p:first-of-type{font-size:14px}.doc>.sec:nth-of-type(2)>ul{grid-template-columns:1fr;gap:18px}.doc>.sec:nth-of-type(2)>ul>li{font-size:12px;padding-left:12px}.doc>.sec:nth-of-type(2)>ul>li>strong{font-size:14px}
+ .destination-nav{grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px}.destination-nav label{padding:11px 7px;font-size:14px;white-space:nowrap}.destination-panels{padding:23px 17px 18px;border-radius:19px}.destination-panel>h3{font-size:clamp(22px,6.3vw,27px);line-height:1.5;text-wrap:balance}.destination-panel>p:first-of-type{font-size:14px}.destination-panel>p{font-size:12px}.destination-panel>h4{font-size:17px;margin-top:25px;padding-top:18px;text-wrap:balance}.destination-panel>ul>li{font-size:12px}.day{grid-template-columns:1fr;gap:13px;padding:19px 0}.day h5{font-size:14px;justify-self:start;padding:8px 12px}.day ul{font-size:13px;line-height:1.95}
+ .budget-table thead{display:none}.budget-table,.budget-table tbody,.budget-table tr{display:block;width:100%}.budget-table tr{display:grid;grid-template-columns:minmax(0,1fr) 72px;border-bottom:1px solid var(--line);padding:12px}.budget-table td{display:block;padding:0;border:0;font-size:11px}.budget-table td:nth-child(2){font-size:21px;text-align:right;line-height:1.4}.budget-table td:nth-child(3){grid-column:1/-1;font-size:10px;color:var(--muted);margin-top:6px}.budget-table tr:last-child{border-bottom:0}.budget-total td:nth-child(2){font-size:25px}
+ details.fold>summary{font-size:12px;padding:13px 38px 13px 14px}.fold-body{font-size:11px;padding:7px 13px 14px}.fold-body table{font-size:11px}th,td{padding:10px 12px}.doc>.sec:nth-last-of-type(-n+2)>h2{font-size:20px}
+}
+@media print{
+ @page{size:A4;margin:14mm 13mm}
+ :root{--cream:#fff;--paper:#fff;--muted:#435b5b;--line:#baccc4}
+ *{animation:none!important;transition:none!important;box-shadow:none!important;transform:none!important}
+ html{scroll-behavior:auto}body{background:#fff;font-size:9pt;line-height:1.7;print-color-adjust:exact;-webkit-print-color-adjust:exact}.doc{max-width:none;padding:0}.doc::before,.brandbar,.postcard-art,.invitation{display:none!important}
+ .hero{display:block;padding:0 0 16px;border-bottom:2px solid var(--ocean)}.hero h1{max-width:none;font-size:18pt}.source-title{font-size:18pt;max-width:none}.hero-copy{display:block;margin-top:12px;padding-top:0;border-top:0}.hero-copy>p{font-size:8pt}.hero-copy>p:last-child{font-size:7pt;border-left:0;padding:0;margin-top:5px}
+ .doc>.sec{margin-top:23px}h2{font-size:17pt;margin-bottom:13px;break-after:avoid}h3,h4,h5{break-after:avoid}h4{font-size:11pt}
+ .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:13px 0;border:1px solid var(--line);border-radius:0;break-inside:avoid}.cards::before,.cards::after{display:none}.card{display:flex;flex-direction:column;gap:6px;padding:6px 12px;border-left:1px dashed var(--line)!important;border-bottom:0!important}.card:first-child{border-left:0!important}.card::before{position:static;font-size:7pt;opacity:1}.card h4{font-size:12pt;padding-top:0}.card .money{font-size:19pt}.kv .k{font-size:6pt}.kv .v{font-size:7pt}.card>.kv:nth-of-type(1) .v{font-size:6pt}.card>.kv:nth-of-type(2){text-align:left;padding:0;margin:0}.card>.kv:nth-of-type(2) .k{font-size:5.5pt}.card>.kv:nth-of-type(3) .k{display:block}.card>.tag{font-size:6pt;border-top:1px solid var(--line);padding-top:5px}.card>.kv:last-child .k{display:block;font-size:6pt}.card>.kv:last-child .v{display:block;font-size:6pt}.cards+p{font-size:7pt}
+ .doc>.sec:nth-of-type(2){padding:19px;border-radius:0;margin-top:22px}.doc>.sec:nth-of-type(2)::before{display:none}.doc>.sec:nth-of-type(2)>h2{font-size:16pt}.doc>.sec:nth-of-type(2)>p:first-of-type{font-size:10pt}.doc>.sec:nth-of-type(2)>ul{grid-template-columns:1fr 1fr;gap:15px 23px}.doc>.sec:nth-of-type(2)>ul>li{font-size:8pt}.doc>.sec:nth-of-type(2)>ul>li>strong{font-size:9pt}.doc>.sec:nth-of-type(2)>p:not(:first-of-type){font-size:7pt}
+ .destination-tabs>legend,.destination-nav,.destination-choice{display:none!important}.destination-panels{padding:0;border:0;border-radius:0;background:#fff}.destination-panel{display:block!important;break-before:page}.destination-panel>h3{font-size:21pt;margin-top:0}.destination-panel>p:first-of-type{font-size:10pt}.destination-panel>p{font-size:8pt}.destination-panel>ul{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.destination-panel>ul>li{font-size:8pt;padding:10px;border-radius:0}.destination-panel>h4{font-size:12pt;margin-top:23px;padding-top:13px}
+ .day{grid-template-columns:125px minmax(0,1fr);gap:18px;padding:14px 0;break-inside:avoid}.day h5{font-size:9pt;padding:8px;border-radius:0;justify-self:stretch}.day ul{font-size:8pt;line-height:1.85}.day li{margin-bottom:6px}
+ .table-wrap{overflow:visible;border-radius:0}table{min-width:0;font-size:8pt}thead{display:table-header-group}tr{break-inside:avoid}th,td{padding:8px 10px}.budget-table{display:table;table-layout:fixed}.budget-table thead{display:table-header-group}.budget-table tbody{display:table-row-group}.budget-table tr{display:table-row;padding:0}.budget-table th,.budget-table td{display:table-cell;border-bottom:1px solid var(--line);padding:8px 10px;font-size:8pt}.budget-table td:nth-child(2){font-size:13pt;text-align:left}.budget-table td:nth-child(3){font-size:8pt;margin:0;color:var(--deep)}.budget-total td:nth-child(2){font-size:17pt}
+ details.fold{break-inside:auto;border-radius:0;margin:16px 0}details.fold>summary{font-size:9pt;padding:10px 12px;break-after:avoid}details.fold>summary::after{display:none}.fold-body{display:block!important;content-visibility:visible!important;font-size:8pt;padding:6px 12px 12px}details.fold::details-content{content-visibility:visible!important;display:block!important}.fold-body h3{font-size:12pt}.fold-body h4{font-size:10pt}.fold-body table{font-size:8pt}
+ .doc>.sec:nth-last-of-type(-n+2)>h2{font-size:16pt}.doc>.sec:nth-last-of-type(-n+2)>p{font-size:8pt}
+}
+#destination-1:checked~.destination-nav label[for="destination-1"]{background:var(--ocean);color:var(--paper);border-color:var(--ocean)}#destination-1:checked~.destination-panels>#destination-panel-1{display:block}#destination-1:focus-visible~.destination-nav label[for="destination-1"]{outline:3px solid var(--coral);outline-offset:4px}
+#destination-2:checked~.destination-nav label[for="destination-2"]{background:var(--ocean);color:var(--paper);border-color:var(--ocean)}#destination-2:checked~.destination-panels>#destination-panel-2{display:block}#destination-2:focus-visible~.destination-nav label[for="destination-2"]{outline:3px solid var(--coral);outline-offset:4px}
+#destination-3:checked~.destination-nav label[for="destination-3"]{background:var(--ocean);color:var(--paper);border-color:var(--ocean)}#destination-3:checked~.destination-panels>#destination-panel-3{display:block}#destination-3:focus-visible~.destination-nav label[for="destination-3"]{outline:3px solid var(--coral);outline-offset:4px}
+#destination-4:checked~.destination-nav label[for="destination-4"]{background:var(--ocean);color:var(--paper);border-color:var(--ocean)}#destination-4:checked~.destination-panels>#destination-panel-4{display:block}#destination-4:focus-visible~.destination-nav label[for="destination-4"]{outline:3px solid var(--coral);outline-offset:4px}</style>
+</head>
+<body>
+<main class="doc">
+<div class="brandbar c-decoration" aria-hidden="true"><b>一起出走</b><span>A LITTLE BREAK / 2026</span></div><header class="hero"><h1><span class="invitation c-decoration">一起，<br><em>去放个假。</em></span><span class="source-title">团队 Outing 四方案<span class="source-subtitle"> · <span class="destination-word">顺义温泉</span>、<span class="destination-word">厦门</span>、<span class="destination-word">富国岛</span>与<span class="destination-word">普吉岛</span></span></span></h1>
+<div class="postcard-art c-decoration" aria-hidden="true">
+  <div class="postcard-back"></div>
+  <div class="postcard-front">
+    <svg viewBox="0 0 560 376" xmlns="http://www.w3.org/2000/svg" role="presentation">
+      <defs>
+        <clipPath id="c-island-window"><rect x="0" y="0" width="560" height="376" rx="9"/></clipPath>
+        <pattern id="c-sea-lines" width="60" height="28" patternUnits="userSpaceOnUse"><path d="M-10 14Q5 4 20 14T50 14T80 14" fill="none" stroke="#fff8e5" stroke-width="2" opacity=".5"/></pattern>
+      </defs>
+      <g clip-path="url(#c-island-window)">
+        <path fill="#bce5ed" d="M0 0h560v376H0z"/>
+        <circle cx="415" cy="104" r="52" fill="#f3785d"/>
+        <g fill="none" stroke="#f3785d" stroke-width="3" stroke-linecap="round"><path d="M415 31V19M415 189v-12M487 104h13M329 104h12M465 54l9-9M355 164l9-9M465 154l9 9M355 44l9 9"/></g>
+        <path d="M55 101q24-20 50 0M105 101q24-20 50 0" stroke="#fff9e9" stroke-width="12" stroke-linecap="round" fill="none"/>
+        <path d="M0 206q83-20 151 0t141 0t139 0t139 0v180H0Z" fill="#62bfc8"/>
+        <path d="M0 243q83-22 151 0t141 0t139 0t139 0v140H0Z" fill="#2d8b97"/>
+        <path d="M0 212h560v164H0z" fill="url(#c-sea-lines)"/>
+        <path d="M-27 380Q39 277 165 276q61-2 105 36t124 68Z" fill="#fff1c8"/>
+        <path d="M105 323q33-49 60-130" fill="none" stroke="#bc7954" stroke-width="14" stroke-linecap="round"/>
+        <path d="M166 194q-38-77-104-56 61 7 92 68M165 194q-76-37-112 14 57-27 109 0M167 191q7-89 78-84-56 22-66 93M165 197q58-54 107-10-68-12-98 26M164 193q-9-63-57-78 36 38 45 86" fill="#22685f"/>
+        <path d="m349 279 41-30 34 32Z" fill="#fff9eb"/>
+        <path d="M390 249v65m-24 2h50" stroke="#fff9eb" stroke-width="3" stroke-linecap="round"/>
+        <path d="m369 282 45 0-8 15h-26Z" fill="#ed765d"/>
+        <path d="M35 351q50-13 87 0m50 0q25-8 54 0" stroke="#dfa77b" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </g>
+    </svg>
+    <div class="postcard-caption"><span>A LITTLE BREAK, TOGETHER.</span><span>☺</span></div>
+  </div>
+  <div class="postmark"><span>OUT OF OFFICE</span><strong>去 · 放空</strong><span>TEAM GETAWAY</span></div>
+  <svg class="postcard-flight" viewBox="0 0 170 75" xmlns="http://www.w3.org/2000/svg" role="presentation"><path d="M4 56q56-47 82-13t61-14" fill="none" stroke="#286169" stroke-width="2" stroke-dasharray="5 6"/><path d="m137 16 30-9-12 29-5-13Z" fill="#ec755b"/></svg>
+</div>
+<div class="hero-copy"><p>出行窗口为 <strong>2026 年 10 月下旬或 11 月上旬</strong>，从北京出发，远途最多 4 个自然日。四选项为顺义温泉酒店 2 天 1 晚、厦门 4 天 3 晚、富国岛 4 天条件方案，以及普吉岛 4 天 3 晚直飞优先方案。以下均按 <strong>20 名成人、10 间双床房、2 人合住</strong>测算，日期与人数尚未确定。</p>
+<p>预算为 20 人双住测算，含基础费用与应急，实际以报价为准。</p></div></header>
+<section class="sec"><h2>一、先看四个选择</h2>
+<div class="cards">
+<article class="card">
+<h4>顺义温泉酒店</h4>
+<div class="kv"><span class="k">天数</span><span class="v">2 天 1 晚</span></div>
+<div class="kv"><span class="k">人均规划资金</span><span class="v money">1900 元</span></div>
+<div class="kv"><span class="k">核心体验</span><span class="v">泡汤、酒店休息、轻松聚餐</span></div>
+<div class="tag"><span class="tag-k">适合</span>少请假、少折腾</div>
+<div class="kv"><span class="k">选择条件</span><span class="v">对应周末；温泉和双床库存须确认</span></div>
+</article>
+<article class="card">
+<h4>厦门</h4>
+<div class="kv"><span class="k">天数</span><span class="v">4 天 3 晚</span></div>
+<div class="kv"><span class="k">人均规划资金</span><span class="v money">4300 元</span></div>
+<div class="kv"><span class="k">核心体验</span><span class="v">城市美食、海滨慢走、完整自由半日</span></div>
+<div class="tag"><span class="tag-k">适合</span>想换城市、兼顾便利与预算</div>
+<div class="kv"><span class="k">选择条件</span><span class="v">往返航班均在四天内；看海以岸上体验为主</span></div>
+</article>
+<article class="card abroad">
+<h4>越南富国岛</h4>
+<div class="kv"><span class="k">天数</span><span class="v">4 天 3 晚，附航程条件</span></div>
+<div class="kv"><span class="k">人均规划资金</span><span class="v money">5600 元</span></div>
+<div class="kv"><span class="k">核心体验</span><span class="v">海滨酒店、泳池、沙滩与日落</span></div>
+<div class="tag"><span class="tag-k">适合</span>更想出境住海滨酒店</div>
+<div class="kv"><span class="k">选择条件</span><span class="v">D1 抵岛、D4 抵京；入境方案明确；全包含应急 ≤6000 元</span></div>
+</article>
+<article class="card abroad">
+<h4>泰国普吉岛</h4>
+<div class="kv"><span class="k">天数</span><span class="v">4 天 3 晚，直飞优先</span></div>
+<div class="kv"><span class="k">人均规划资金</span><span class="v money">5000 元</span></div>
+<div class="kv"><span class="k">核心体验</span><span class="v">酒店、海滩、半日城市轻游</span></div>
+<div class="tag"><span class="tag-k">适合</span>想出境、优先减少中转</div>
+<div class="kv"><span class="k">选择条件</span><span class="v">有北京直飞线索；指定日期班期与当日回京仍需确认</span></div>
+</article>
+</div>
+<p><strong>日期与航程直接影响选择</strong>：京郊温泉适合这次的短途休息需求；厦门优先轻松看海与城市餐饮。富国岛 10 月仍在雨季范围，11 月进入通常旱季范围，11 月初仍需接受过渡期降雨。普吉可能遇阵雨和风浪，具体天气与海况以行前官方预报为准，以酒店与陆上体验为主。境外方案必须从北京出发至回到北京都落在 4 个自然日内；第 5 日凌晨落地同样计第 5 天，不能压成“四天游”。</p></section>
+<section class="sec"><h2>二、按团队最在意的事选择</h2>
+<p><strong>现在适合做偏好投票，尚未到可直接下单的阶段。</strong>远途的 D1、D4 主要用于往返交通，真正完整的度假时间通常是 D2、D3 两天，不是四个整天都在游玩。</p>
+<ul><li><strong>少请假、交通简单，主要想休息</strong>：选顺义温泉酒店。用最低交通负担换泡汤、聚餐和完整自由半日；取舍是只有 1 晚，更像周末休整，不是远行换环境。</li><li><strong>远途最多 4 天，希望省心、吃得方便、控制花费</strong>：优先厦门，八市、中山路和海滨慢走兼顾不同兴趣，预算模型 4300 元；它偏城市美食与岸上看海，不是热带海岛躺住体验。</li><li><strong>最想住境外海滨酒店，接受雨天和航班筛选</strong>：富国岛可现在投偏好票，优先询 11 月 5–8 日；酒店、泳池与沙滩是主角，主要取舍是中转可能吃掉休息时间，航程与入境方案合格后才能确认成行。</li><li><strong>想出境，优先减少中转</strong>：先询普吉直飞，把海滩休息和普吉老镇半日轻游结合。直飞线索让它更值得优先询价，但约 6 小时飞行加接送仍是长途，也不能保证晴天或出海；先确认四天内回京的班期再定酒店。</li></ul>
+<p>四套均安排至少一个完整自由半日，不设强制培训或破冰；泡汤、下水与乘船自愿。不参加的同事可在酒店或城市近距离活动，基础餐补、交通协调和保险照常覆盖。</p>
+<p>度假区也有出行风险，选择理由不采用未经证实的国家安全排名。统一使用正规接送、夜间结伴，不把护照交给非必要中介；配好 24 小时联络与保险，行前查阅中国驻当地使领馆提醒。</p></section>
+<section class="sec"><h2>三、方案详情</h2>
+<fieldset class="destination-tabs"><legend>选择目的地</legend>
+<input class="destination-choice" type="radio" name="destination" id="destination-1" aria-controls="destination-panel-1" checked>
+<input class="destination-choice" type="radio" name="destination" id="destination-2" aria-controls="destination-panel-2">
+<input class="destination-choice" type="radio" name="destination" id="destination-3" aria-controls="destination-panel-3">
+<input class="destination-choice" type="radio" name="destination" id="destination-4" aria-controls="destination-panel-4">
+<div class="destination-nav">
+<label id="destination-label-1" for="destination-1">顺义温泉</label>
+<label id="destination-label-2" for="destination-2">厦门</label>
+<label id="destination-label-3" for="destination-3">富国岛</label>
+<label id="destination-label-4" for="destination-4">普吉岛</label>
+</div><div class="destination-panels">
+<section class="sec destination-panel" id="destination-panel-1" aria-labelledby="destination-label-1"><h3><span class="destination-heading-main">京郊顺义温泉酒店</span><span class="destination-heading-sub"> · 2 天 1 晚</span></h3>
+<p><strong>定位</strong>：统一包车直达同一家顺义温泉酒店，泡汤、休息和聚餐为主。10 月底至 11 月初以酒店室内与温泉为核心，户外散步随当天气温调整。</p>
+<p><strong>亮点</strong></p>
+<ul><li>周末即可完成，不用赶飞机或火车，北京统一包车到店。</li><li>下午整块留给泡汤、午睡和聊天，晚餐后各自休息，第二天慢早餐。</li><li>降温时仍有温泉和酒店室内休闲，适合不同体力、不同活动偏好的同事。</li></ul>
+<h4>京郊每日安排 · 2 天早中晚、自由半日与天气替代</h4>
+<article class="day"><h5>D1（周六，抵店与泡汤）</h5><ul><li>早：自行早餐，按每人 30 元预留；09:30 北京集合，10:00 左右包车出发，最终车程按酒店和集合点核算。</li><li>午：抵达后集体午餐，按酒店规则寄存行李或办理入住；14:00–18:00 完整自由半日，不插入集体集合。温泉预约、午睡、看书、咖啡或室内休闲自选。</li><li>晚：18:30 集体晚餐，之后可自愿聊天、桌游或各自休息；温泉入场时间、次数和闭池时间按酒店预约执行。</li></ul></article>
+<article class="day"><h5>D2（周日，慢早餐与返京）</h5><ul><li>早：酒店早餐，睡到自然醒；可在酒店公共区散步，温泉二次入场仅在套餐明确包含时使用。</li><li>午：按酒店时限退房、集体午餐，14:00 左右统一返京。</li><li>晚：以当日傍晚在北京解散为目标，解散后自行安排晚餐；道路拥堵按当天情况预留。</li></ul></article>
+<p><strong>天气与参与方式</strong>：降温、雨雪或空气质量不适宜时，全程转酒店室内。温泉不适合所有人，按酒店健康提示和个人身体状况选择；不泡汤可休息、桌游、咖啡。温泉关停或不可团体预约时先更换酒店或日期，合同写清退款与替代费用。</p>
+<details class="fold"><summary>京郊酒店候选与套餐要求 · 2 家真实酒店<span class="hint">展开</span></summary><div class="fold-body"><ul><li><strong>北京春晖园温泉度假村</strong>：顺义温榆河畔，优先询价。北京旅游网介绍支持酒店位置和温泉度假定位，页面旧参考价不代表 2026 年周末报价。</li><li><strong>北京顺义新华联丽景温泉酒店</strong>：顺义第二询价对象，北京旅游网有酒店页面；温泉权益、现有设施、团体接待和开放情况以当期酒店资料及合同确认。</li></ul>
+<p>统一要求 10 间双床房、含双早，温泉门票或客房泡池权益逐项写清；确认周末加价、预约容量、入场次数、泳池开放与 20 人用餐条件。以近郊交通和酒店度假为主要筛选条件。</p></div></details>
+<h4>预算依据 · 元/人，含独立应急金</h4>
+<div class="table-wrap"><table class="budget-table">
+<thead><tr><th>项目</th><th>元/人</th><th>计费范围</th></tr></thead>
+<tbody>
+<tr><td>北京统一包车往返</td><td>180</td><td>含司机、燃油、路桥、停车与接送</td></tr>
+<tr><td>1 晚双床房含双早</td><td>600</td><td>1200 元/间夜 ÷ 2，含税服务费的目标分配</td></tr>
+<tr><td>温泉权益</td><td>280</td><td>按周末温泉权益预留，2026 年价格重询；套餐已含时合并核算</td></tr>
+<tr><td>餐饮与餐补</td><td>450</td><td>D1 早餐补 30＋午餐 120＋晚餐 180＋D2 午餐 120</td></tr>
+<tr><td>室内活动与公共空间</td><td>80</td><td>桌游等基础费用与空间预留</td></tr>
+<tr><td>旅行保险</td><td>30</td><td>按活动与年龄核保</td></tr>
+<tr><td>中文协调及综合税费</td><td>90</td><td>报价列明发票、服务与应税费用</td></tr>
+<tr class="budget-total"><td><strong>采购合计</strong></td><td><strong>1710</strong></td><td>模型，非可订报价</td></tr>
+<tr><td>应急预留</td><td>190</td><td>独立留存，非必花</td></tr>
+<tr class="budget-total"><td><strong>资金合计</strong></td><td><strong>1900</strong></td><td>20 人合计 38000 元</td></tr>
+</tbody></table></div>
+<p>D1 早餐补和自由半日的基础交通、温泉权益已计入；自由选择的 SPA、酒水和升级项目个人自费。酒店与温泉打包报价低于分项合计时按实结算。</p></section>
+<section class="sec destination-panel" id="destination-panel-2" aria-labelledby="destination-label-2"><h3><span class="destination-heading-main">厦门</span><span class="destination-heading-sub"> · 4 天 3 晚</span></h3>
+<p><strong>定位</strong>：连住同一家酒店，城市美食和海滨慢走为主，最多安排一个半日主要景点，保留完整自由半日。按本次预算优先考虑往返飞行，车次或航班以指定日期可订结果为准。</p>
+<p><strong>亮点</strong></p>
+<ul><li>城市餐饮、咖啡、老街与海滨散步组合，想出门和想宅酒店的人都容易安排。</li><li>连住 3 晚不搬行李，鼓浪屿只作可选半日景点，不安排连续打卡。</li><li>本次以岸上看海和城市体验为主，预算模型 4300 元，给团队一个低于出境上限的国内选择。</li></ul>
+<h4>厦门每日安排 · 4 天早中晚、自由半日与雨天替代</h4>
+<article class="day"><h5>D1（周四，抵达与城市晚餐）</h5><ul><li>早：北京集合，机场或机上早餐，随当日航班出发；优先能在下午前抵达的班次。</li><li>午：抵厦后正规车辆接机、午餐、入住或寄存行李；午后休息，在酒店附近短走。</li><li>晚：当地餐厅欢迎晚餐，可自愿在中山路一带轻逛，统一约定回店方式。</li></ul></article>
+<article class="day"><h5>D2（周五，城市半日与自由半日）</h5><ul><li>早：酒店早餐后安排八市—中山路半日慢游，小吃、老街与咖啡按个人兴趣选择。</li><li>午：集体午餐后回酒店，14:00–18:00 完整自由半日；睡觉、咖啡、酒店公共区或酒店附近散步自选，餐补和联络方式提前发放。</li><li>晚：自由晚餐或小组聚餐，基础餐费纳入模型；需固定接驳的自由路线提前登记。</li></ul></article>
+<article class="day"><h5>D3（周六，轻景点与海边）</h5><ul><li>早：酒店早餐；鼓浪屿作为可选的半日团体项目，先确认轮渡、预约、步行强度和回程。若不选鼓浪屿，则留在厦门本岛安排半日城市路线。</li><li>午：当地午餐后回酒店午休，未参加景点的同事在本岛咖啡、酒店休息，提供同等基础餐补与必要接驳。</li><li>晚：天气合适时海滨短走，之后集体晚餐。海边停留以散步为主，风大或降雨转室内。</li></ul></article>
+<article class="day"><h5>D4（周日，返京）</h5><ul><li>早：酒店早餐，收拾行李、退房；航班允许时在酒店附近休息。</li><li>午：午餐后按航班倒推送机；航班较早则改机场简餐。</li><li>晚：机场或机上晚餐后返京，当日解散。采购需给出当日回京的实际落地时间，避免末班回程压缩所有活动。</li></ul></article>
+<p><strong>天气与活动替代</strong>：本次按适合城市与岸上看海的窗口设计，泳池、下海和出船均以天气、开放情况和个人意愿为准。风雨天取消渡海和海滨暴露路线，改酒店休息、室内咖啡或已确认开放的场馆，费用按合同退补。自由半日保持完整。</p>
+<details class="fold"><summary>厦门酒店候选与选房要求 · 2 家真实酒店<span class="hint">展开</span></summary><div class="fold-body"><ul><li><strong>厦门泛太平洋大酒店（Pan Pacific Xiamen）</strong>：市区酒店询价对象，官方页面支持酒店名称与湖滨北路地址；城市路线按实际接驳安排。</li><li><strong>厦门海景洲际酒店（InterContinental Xiamen）</strong>：滨海片区询价对象，官方品牌酒店入口供核对名称与位置；与市区酒店分开比较交通和餐饮便利度。</li></ul>
+<p>两家均未取得指定日期团体报价。700 元/间夜是含税双早采购分配，不是任一家酒店的价格承诺；不含海景房保证。3 晚同店，10 间双床、含双早；选择交通便利、可承接 20 人用餐的酒店。最终城市路线随酒店所在片区调整，避免把不同片区写成步行可达。泳池、会议空间与延迟退房另行确认。</p></div></details>
+<h4>预算依据 · 元/人，含独立应急金</h4>
+<div class="table-wrap"><table class="budget-table">
+<thead><tr><th>项目</th><th>元/人</th><th>计费范围</th></tr></thead>
+<tbody>
+<tr><td>往返机票</td><td>1600</td><td>含税、含托运行李的目标分配</td></tr>
+<tr><td>北京统一机场集散</td><td>100</td><td>往返接送</td></tr>
+<tr><td>厦门接送机与必要包车</td><td>260</td><td>含司机、路桥、停车及已排定接驳</td></tr>
+<tr><td>3 晚双床房含双早</td><td>1050</td><td>700 元/间夜 ÷ 2 × 3 晚，含税服务费</td></tr>
+<tr><td>非酒店早餐餐饮</td><td>650</td><td>含 D1 早餐、往返途中餐、自由半日及自由晚餐餐补</td></tr>
+<tr><td>景点、轮渡及基础活动</td><td>150</td><td>采购分配，非门票现价；不重复计含餐项目</td></tr>
+<tr><td>中文协调及综合税费</td><td>140</td><td>列明供应商服务与发票费用</td></tr>
+<tr><td>旅行保险</td><td>50</td><td>按活动与年龄核保</td></tr>
+<tr class="budget-total"><td><strong>采购合计</strong></td><td><strong>4000</strong></td><td>模型，非可订报价</td></tr>
+<tr><td>应急预留</td><td>300</td><td>独立留存，非必花</td></tr>
+<tr class="budget-total"><td><strong>资金合计</strong></td><td><strong>4300</strong></td><td>20 人合计 86000 元</td></tr>
+</tbody></table></div>
+<p>餐费覆盖行程内的集体餐、自由活动基础餐和途中简餐，酒店早餐不重复计费。自选高价体验和个人购物另计；报价上涨先调整日期、酒店和可选项目，保持休息时间。</p></section>
+<section class="sec destination-panel" id="destination-panel-3" aria-labelledby="destination-label-3"><h3><span class="destination-heading-main">越南富国岛</span><span class="destination-heading-sub"> · 四天条件方案</span></h3>
+<p><strong>定位</strong>：保留团队对富国岛的偏好，以同一家海滨酒店为基地，安排 4 天 3 晚。先验证往返航程，再比较酒店；若只能晚到早走，须公示有效休息时间，由团队据此选择。</p>
+<p><strong>亮点</strong></p>
+<ul><li>D2 全天酒店自由，泳池、沙滩散步、午睡与日落随个人节奏安排。</li><li>只留南岛半日轻外出，最多 1–2 站，另外半天继续休息。</li><li>11 月初进入官方通常旱季范围，相比 10 月仍属雨季更值得优先询价，仍接受阵雨与过渡期海况。</li></ul>
+<p><strong>成行条件</strong>：D1 当日抵岛、D4 当日抵京，免签或合法签证方案已明确且来得及办理，全部必需费用加应急不超过 6000 元/人；当前采购 5200＋应急 400＝5600 元/人。</p>
+<details class="fold"><summary>富国岛四天航程门槛 · 采购必须给出完整时间表<span class="hint">展开</span></summary><div class="fold-body"><ul><li>本轮未找到可用于这几个日期的北京直飞富国岛证据，先按中转方案询价。历史联程报道和聚合页面仅用于找路线，不能证明本次班期。</li><li>完整航程写明出发机场、经停或中转地、每段日期及当地时间、转机时长、是否过夜、是否重新托运行李和入境要求。</li><li>北京出发至回到北京最多 4 个自然日；第 5 日凌晨抵京即不符合本轮范围。若第 0 日晚先去机场或飞出北京，也要计入占用时间。</li><li>优先同日抵达、当天返京的连接；若 D1 深夜抵达或 D4 清晨起飞，须展示实际可休息时长。仅有路线存在的公开信息不能证明指定日期可订。</li><li>入境路线决定是否适用富国岛免签。经越南本土转机时，核实是否进入本土、是否需签证、行李能否直挂；免签或合法签证方案须由承运航司和接待方确认，必要签证与办理费计入总预算，办理时间须来得及。</li><li>航程、证件或采购价任一项未达到条件时，保留为偏好备选，采用已通过条件的方案。</li></ul></div></details>
+<h4>富国岛每日安排 · 4 天早中晚、自由半日与雨天替代</h4>
+<p>以下按 D1 抵达、D4 当日回京且有 3 晚住宿的合格航程设计，实际时刻以订票前确认的往返连接为准。</p>
+<article class="day"><h5>D1（抵达日）</h5><ul><li>早：北京集合，早餐或机上简餐，核对护照及入境材料后出发。</li><li>午：飞行及必要中转，机场或机上午餐；抵达后正规接机。</li><li>晚：入住同一家海滨酒店，晚餐后休息；晚到时安排简餐，取消外出活动。</li></ul></article>
+<article class="day"><h5>D2（酒店全自由与日落）</h5><ul><li>早：酒店早餐后全天自由，不设团队活动；天气允许时泳池或海边散步。</li><li>午：自由午餐、午睡，酒店休息、咖啡与自费 SPA 自选，基础餐费已纳入。14:00–18:00 保持完整自由半日。</li><li>晚：日落散步自愿参加，酒店或附近晚餐，想继续休息的同事按餐补自行用餐。</li></ul></article>
+<article class="day"><h5>D3（南岛半日与自由半日）</h5><ul><li>早：酒店早餐后包车去南岛，安排日落小镇步行区＋咖啡，最多 1–2 站，不含缆车或乐园；若从酒店出发车程太长，则改酒店附近散步与咖啡。</li><li>午：当地午餐后回酒店，14:00–18:00 另一段完整自由半日。不外出的同事可全天留酒店，提供基础餐补和联络支持。</li><li>晚：附近集体晚餐后休息，不再叠加出海或跨岛转场。</li></ul></article>
+<article class="day"><h5>D4（返京日）</h5><ul><li>早：酒店早餐、收拾行李、退房；早班航程则安排打包早餐。</li><li>午：根据合格航程送机，机场或机上午餐；转机时间与行李衔接事先写清。</li><li>晚：途中晚餐，当日抵达北京并解散。任何连接把抵京推到下一天，整条航程重新筛选。</li></ul></article>
+<p><strong>天气与项目</strong>：越南国家旅游局将 5–10 月列为雨季、11 月至次年 4 月列为旱季。本次 10 月底按雨季尾段准备，11 月初也接受天气过渡；晴天和出海均不能作为必达体验。基础方案以酒店和陆上活动为主；雷雨时不下水，改室内桌游、咖啡、聚餐和休息。潜水、缆车、大型乐园等可自愿另选，事先核价并用替换活动的方式安排。</p>
+<details class="fold"><summary>富国岛酒店候选与选房要求 · 2 家<span class="hint">展开</span></summary><div class="fold-body"><ul><li><strong>Novotel Phu Quoc Resort</strong>：海滨度假酒店候选，官方公开页支持酒店与设施存在；普通房型的餐食、活动与机场接送按实际套餐确认。</li><li><strong>Best Western Premier Sonasea Phu Quoc</strong>：度假酒店询价候选，具体设施与双床配置待最新产品资料核验。</li></ul>
+<p>3 晚同店，优先把机场接送、餐饮与海滨休息放在同一住宿片区。按 500 元/间夜分配含税双早房费，只是采购目标，上述两家均未取得指定日期 10 间双床库存与报价。同步询问健康与设施须知、海滩通行、泳池开放、20 人用餐和雨天公共空间。</p></div></details>
+<h4>预算依据 · 元/人，含独立应急金</h4>
+<div class="table-wrap"><table class="budget-table">
+<thead><tr><th>项目</th><th>元/人</th><th>计费范围</th></tr></thead>
+<tbody>
+<tr><td>往返机票</td><td>2800</td><td>全部航段含税、含托运行李；行李与改签规则单列</td></tr>
+<tr><td>北京统一机场集散</td><td>100</td><td>往返接送</td></tr>
+<tr><td>岛上接送机与半日包车</td><td>300</td><td>含司机、停车及已排定接驳</td></tr>
+<tr><td>3 晚双床房含双早</td><td>750</td><td>500 元/间夜 ÷ 2 × 3 晚，含税服务费</td></tr>
+<tr><td>非酒店早餐餐饮</td><td>600</td><td>含途中简餐、自由活动餐补和自由晚餐</td></tr>
+<tr><td>基础活动</td><td>150</td><td>陆上基础活动与必要小额门票预留</td></tr>
+<tr><td>中文协调及综合税费</td><td>200</td><td>列明服务与当地税费</td></tr>
+<tr><td>旅行保险</td><td>100</td><td>含医疗与紧急救援，核对实际活动保障</td></tr>
+<tr><td>入境文件与签证预留</td><td>200</td><td>依实际路线办理；免签适用则按实减少</td></tr>
+<tr class="budget-total"><td><strong>采购合计</strong></td><td><strong>5200</strong></td><td>允许报价波动空间 400 元，至采购上限 5600 元</td></tr>
+<tr><td>应急预留</td><td>400</td><td>独立留存，非必花</td></tr>
+<tr class="budget-total"><td><strong>资金合计</strong></td><td><strong>5600</strong></td><td>20 人合计 112000 元；最高 120000 元</td></tr>
+</tbody></table></div>
+<p>含应急的最高资金为 6000 元/人。报价超过采购上限 5600 元时，调整航程、酒店或日期；航程与签证增加的费用必须在报价中覆盖，应急金保留。</p></section>
+<section class="sec destination-panel" id="destination-panel-4" aria-labelledby="destination-label-4"><h3><span class="destination-heading-main">泰国普吉岛</span><span class="destination-heading-sub"> · 4 天 3 晚，直飞优先</span></h3>
+<p><strong>定位</strong>：先找北京直飞往返，把时间留给同一家酒店和海滩。聚合平台有直飞路线线索，比富国岛中转方案少一段衔接；具体日期的航班、20 人座位、抵达和返京时刻仍需核实。</p>
+<p><strong>亮点</strong></p>
+<ul><li>优先北京直飞，减少中转和行李衔接，把四天假期更多留给休息。</li><li>连住同一家度假酒店，海边散步、泳池、附近用餐为主，节奏简单。</li><li>半日城市轻游加完整自由半日，不要求全员出海；5000 元模型给报价波动留出余量。</li></ul>
+<h4>普吉每日安排 · 4 天早中晚、自由半日与雨天替代</h4>
+<p>以下按 D1 当日抵达、连住 3 晚、D4 当日回京的航程设计。优先直飞；若备选航程包含中转，完整展示衔接并保持四天总上限。</p>
+<article class="day"><h5>D1（抵达日）</h5><ul><li>早：北京集合，机场或机上早餐，按合格直飞班次出发。</li><li>午：飞行及入境，机场或机上午餐，正规车辆接机；北京出发至普吉的直飞飞行时间可先按约 6 小时量级规划，具体机场与班次以实际报价为准。</li><li>晚：抵店后欢迎晚餐，晚到则安排简餐直接休息，活动从次日开始。</li></ul></article>
+<article class="day"><h5>D2（酒店与海滩日）</h5><ul><li>早：睡到自然醒，酒店早餐，泳池、海边散步与休息自选。</li><li>午：酒店附近午餐、午休，14:00–18:00 完整自由半日，不安排集合项目。</li><li>晚：天气合适时自愿看日落，之后附近集体晚餐；海滩关闭或风浪大时改室内用餐和聊天。</li></ul></article>
+<article class="day"><h5>D3（半日轻游与自由半日）</h5><ul><li>早：酒店早餐，包车半日轻游，以普吉老镇或酒店附近陆上路线择一为主，避免多片区赶路；留酒店也可。</li><li>午：当地午餐后返店休息，14:00–18:00 自由半日；未参加外出的同事有基础餐补和联络支持。</li><li>晚：自由晚餐或小组聚餐，基础餐费计入预算，外出接送提前登记。</li></ul></article>
+<article class="day"><h5>D4（返京日）</h5><ul><li>早：酒店早餐、退房，按航班安排寄存行李或直接送机。</li><li>午：机场或机上午餐，按当日可回京航程返程。</li><li>晚：途中晚餐、当日抵京解散。若同一日期只有第 5 日抵京的连接，该日期不选此航程。</li></ul></article>
+<p><strong>天气与替代</strong>：可能遇阵雨和风浪，具体天气与海况以行前官方预报为准。基础方案以酒店与陆上活动为主，完整自由半日保留。短程出海仅作另行询价的自愿替换项目，核对运营资质、船况、保险、天气退改和实际总价；遇雷暴不下水。雨天改酒店桌游、咖啡、室内休息与正规餐厅聚餐。</p>
+<p><strong>入境材料</strong>：按泰国官方与承运航司要求核验护照和入境资格，统一核对 Thailand Digital Arrival Card（TDAC，泰国电子入境卡）适用范围和填写要求。官方入口见来源；电子入境卡与签证资格分别核验。</p>
+<details class="fold"><summary>普吉酒店候选与选房要求 · 2 家真实酒店<span class="hint">展开</span></summary><div class="fold-body"><ul><li><strong>Centara Karon Resort Phuket</strong>：卡伦片区度假酒店候选，官网支持酒店名称、地址与泳池等设施；酒店到海滩的实际路线和距离须确认，优先作为询价对象。</li><li><strong>Katathani Phuket Beach Resort</strong>：位于 Kata Noi 的度假酒店候选，官网有客房、泳池、餐饮和会议设施；各翼楼与具体房型位置不同，按实际双床房和用餐报价比较。</li></ul>
+<p>3 晚同店，10 间双床含双早含税。模型先按 500 元/间夜分配，两家都未查指定日期库存与团体价；超出该分配时，在人均 6000 元总上限内重算，或更换同片区可用酒店。机场至卡伦或 Kata Noi 的车程按实际路况安排，单列接送；片区确定后再定城市路线，泳池和雨天公共空间需确认。</p></div></details>
+<h4>预算依据 · 元/人，含独立应急金</h4>
+<div class="table-wrap"><table class="budget-table">
+<thead><tr><th>项目</th><th>元/人</th><th>计费范围</th></tr></thead>
+<tbody>
+<tr><td>往返机票</td><td>2400</td><td>优先直飞，含税和托运行李的目标分配</td></tr>
+<tr><td>北京统一机场集散</td><td>100</td><td>往返接送</td></tr>
+<tr><td>普吉接送机与半日包车</td><td>250</td><td>含司机、路桥、停车及已排定接驳</td></tr>
+<tr><td>3 晚双床房含双早</td><td>750</td><td>500 元/间夜 ÷ 2 × 3 晚，含税服务费</td></tr>
+<tr><td>非酒店早餐餐饮</td><td>500</td><td>含 D1 早餐、途中简餐、自由活动餐补与自由晚餐</td></tr>
+<tr><td>基础活动与必要门票</td><td>200</td><td>陆上活动预留；自愿出海另核预算</td></tr>
+<tr><td>中文协调及综合税费</td><td>300</td><td>列明服务、当地税及必要手续办理费用</td></tr>
+<tr><td>旅行保险</td><td>100</td><td>含医疗与紧急救援，核对实际活动保障</td></tr>
+<tr class="budget-total"><td><strong>采购合计</strong></td><td><strong>4600</strong></td><td>距采购上限 5600 元余 1000 元，可应对报价变化</td></tr>
+<tr><td>应急预留</td><td>400</td><td>独立留存，非必花</td></tr>
+<tr class="budget-total"><td><strong>资金合计</strong></td><td><strong>5000</strong></td><td>20 人合计 100000 元；最高 120000 元</td></tr>
+</tbody></table></div>
+<p>本模型尚未获报价，余额用于机票、房费与必需费用变化；采购超过 5600 元/人时重新选日期或酒店，应急金 400 元保留。签证或额外入境费用若实际适用，须加入整包报价重新核算。</p></section>
+</div></fieldset></section>
+<section class="sec"><h2>附录一、组织者参考与投票</h2>
+<details class="fold"><summary>组织者参考 · 询价日期与预算口径<span class="hint">展开</span></summary><div class="fold-body"><p><strong>询价窗口</strong>：10 月 22–25 日、10 月 29 日–11 月 1 日、11 月 5–8 日，均为周四至周日，通常占 2 个工作日，按团队排班核算；京郊对应 10 月 24–25 日、10 月 31 日–11 月 1 日、11 月 7–8 日周末。它们是备选窗口，具体班次和酒店报价会影响最终选择。</p>
+<p>按 2026 年 10 月 20 日计算，最早窗口距出发仅 2 天；出境只适合证件和入境手续已具备、或能在出发前完成确认且及时落实库存的同事。手续来不及就不选这一窗口，不以未核实的办理时长作保证。</p>
+<p><strong>预算口径</strong>：金额是采购分配模型，尚未询价，实时机票、房态与团体报价均待确认。每套含保险、统一接送、餐补、自由活动餐费与独立应急金，最高控制在人均 6000 元以内；京郊和国内按舒适、够用的标准采购。单住差价、个人酒水、购物、SPA、护照新办或换发另计。单住差价按最终房型重算：同房型单人独住相对两人分摊，通常增加半间房费 × 住宿晚数，另计房型价差和早餐规则。</p></div></details>
+<p>建议现在先收集首选、备选和可出行日期，同时按同一需求向有资质供应商询价；拿到往返航程、酒店和完整报价后，再确认最终方案，不把偏好票当作预订承诺。20 人团队总资金按京郊 38000 元、厦门 86000 元、富国岛 112000 元、普吉 100000 元测算；境外方案任何采购都须保留应急，人均总资金不超过 6000 元。</p>
+<details class="fold"><summary>私家团询价需求 · 可直接复制给供应商<span class="hint">展开</span></summary><div class="fold-body"><p><strong>团队与日期</strong></p>
+<ul><li>20 位成人，10 间双床房，2 人合住；请另报单住差价、人数变化和儿童等特殊计价。</li><li>北京统一集合、统一解散。远途最多 4 个自然日，询价窗口为 2026/10/22–25、10/29–11/1、11/5–8；京郊用对应周末 2 天 1 晚。请分别报价，标明报价有效期。</li><li>共同要求：同一酒店连住、含双早、至少完整自由半日、无强制购物和自费、无强制培训破冰；不泡汤或不下水成员有休息与交通餐饮支持。</li></ul>
+<p><strong>分项要求</strong></p>
+<ul><li>京郊：温泉酒店 2 天 1 晚，含北京往返包车、1 晚双床、双早、温泉权益、3 顿正餐与 D1 早餐补；逐项说明温泉预约、入场次数、周末加价和停运退改。采购参考 1710 元/人，另留应急 190 元。</li><li>厦门：4 天 3 晚，含北京往返机票、税与托运行李、两地统一接送、3 晚双床双早、必要当地用车、活动与餐饮；明确自由半日和自由晚餐餐补。采购参考 4000 元/人，另留应急 300 元。</li><li>富国岛：最多 4 天、争取 3 晚，先提供完整往返航程与入境路线，再报酒店。采购参考 5200 元/人、上限 5600 元，另留应急 400 元；必要签证和办理费用包含。</li><li>普吉：4 天 3 晚，优先北京直飞、D4 当日回京，3 晚双床双早；含两地集散、必要当地用车、陆上轻游与完整自由半日，餐费覆盖途中及自由活动。采购参考 4600 元/人、上限 5600 元，另留应急 400 元。</li></ul>
+<p><strong>统一报价与保障</strong></p>
+<ul><li>由持证旅行社承接，境外方案核查出境旅游业务资质；写明签约主体、境内领队或协调人与目的地中文联系人，提供 24 小时应急联络。</li><li>报价逐项列单价、人数、数量和总价，含全部航段税费、托运行李、酒店当地税及服务费、司机费用、门票船票、保险和开票费用。已含餐或温泉权益的套餐避免重复收费。</li><li>列明正餐数量、餐标、自由活动餐补金额及发放方式，途中未供餐也要覆盖。个人自费项目独立列出，参加与否不影响基础接待。</li><li>出境每段写出当地日期与时间、航班号、机场、转机时长、是否过夜、是否行李直挂。包含抵京时间，禁止用跨到第 5 日的航程按四天报价；出境与回程都核对团体座位。</li><li>酒店列出完整名称、地址片区、具体双床房型、含早含税、可用 10 间数量、取消期限与押金；候选替换须提前确认。</li><li>保险列保额、医疗、紧急救援、免赔与活动除外条款；按全员年龄和实际活动承保。</li><li>阴雨、雷暴、强风或活动停运时，写明替代项目、价格差额处理、退款与人员安排。航变、中转失接、疾病和延误的处理责任写进合同。</li><li>提供至少两档酒店或两个日期的对照价。应急金由团队单独保留，报价确定后重新计算每人和全团总资金。</li></ul></div></details>
+<details class="fold"><summary>团队投票模板 · 航程、日期与偏好一起填写<span class="hint">展开</span></summary><div class="fold-body"><p>现在即可填写一个首选和一个备选，境外方案也可投偏好票；航程、入境手续和完整报价确认后，再确认是否预订。</p>
+<ul><li>姓名／昵称：</li><li>首选：□ 顺义温泉酒店 2 天 1 晚　□ 厦门 4 天 3 晚　□ 富国岛四天条件方案　□ 普吉岛 4 天 3 晚直飞优先方案</li><li>备选：</li><li>可出行窗口：□ 10/22–25　□ 10/29–11/1　□ 11/5–8；京郊勾对应周末</li><li>总天数：□ 2 天　□ 最多 4 天　□ 都可</li><li>实际可占用工作日：</li><li>是否接受出境材料准备及白天中转：□ 接受　□ 不接受</li><li>能否接受较晚抵达或较早返程（实际有效休息时间会在最终确认前公示）：</li><li>活动偏好：□ 温泉　□ 酒店休息　□ 城市美食　□ 海滨散步　□ 自愿水上活动</li><li>不参加项目、饮食、体力、晕船或房间要求：</li></ul>
+<p>先统计偏好与可出行人数，询价后剔除日期、四天往返、证件或预算不匹配的选项，再综合首选票和备选票确认方案。护照新办或换发所需时间另核；没有合格境外航程时优先采用国内合格方案。</p></div></details>
+<details class="fold"><summary>出发前确认 · 日期、证件、活动与费用<span class="hint">展开</span></summary><div class="fold-body"><ul><li>确认最终日期、人数、集合点、房型、单双住和可占用工作日；人数或房型变化时重算预算。</li><li>京郊确认温泉套餐与健康提示、公共区开放、预约容量、周末加价与停运退改。</li><li>厦门确认实际航班、酒店片区、鼓浪屿是否参加及轮渡预约，城市与海滨路线按天气调整。</li><li>富国岛确认所有航段、当日回京、入境路线和签证适用性；普吉核验泰国入境资格与 TDAC 申报要求。</li><li>出境行前查验有效护照、承运航司要求、官方移民要求与中国驻当地使领馆提醒。只使用正规车船与活动运营方，水上活动按天气、救生衣和个人情况决定。</li><li>最终核对采购总价、应急留存、保险、自由餐补和自费清单。应急金剩余按团队财务规则结算。</li></ul></div></details></section>
+<section class="sec"><h2>附录二、来源与核验范围</h2>
+<p>核验日期为 <strong>2026-10-16</strong>。公开资料用于核对目的地、季节、酒店和手续；所有采购分配金额由本方案测算，指定日期的航班座位、酒店库存、团体价格与活动开放需在下单前复核。</p>
+<details class="fold"><summary>公开来源清单 · 按来源支持的事实范围<span class="hint">展开</span></summary><div class="fold-body"><p><strong>京郊与厦门</strong></p>
+<ul><li>北京旅游网春晖园介绍页：支持酒店位于顺义温榆河畔及温泉度假定位；页面参考价格属于旧公开资料，不作为 2026 年周末成交价，也不据宣传内容判断水质或健康功效。</li><li>https://s.visitbeijing.com.cn/attraction/117995</li><li>北京旅游网新华联丽景酒店页面：支持酒店存在和作为询价对象，未核实当期设施、温泉权益、开放状态与库存。</li><li>https://s.visitbeijing.com.cn/hotel/101011811</li><li>泛太平洋官方厦门酒店页：支持酒店名称、地址和酒店产品入口，不支持本次团体房价与库存。</li><li>https://www.panpacific.com/zh/hotels-and-resorts/pp-xiamen.html</li><li>洲际酒店集团厦门海景洲际酒店入口：酒店询价与名称位置核对入口；指定日期双床、套餐和库存另行确认。</li><li>https://www.ihg.com/intercontinental/hotels/cn/zh/xiamen/xmnlr/hoteldetail</li><li>厦门轮渡官方入口：用于采购核验鼓浪屿航线、实名预约、班次与停航信息，本轮未确认具体日期轮渡；D2 自由半日在厦门本岛进行，不与跨岛返程绑定。</li><li>https://www.xmferry.com/</li><li>厦门气候舒适度按岸上城市休闲设计，不采用尚未取得官方气象资料支持的具体温度区间或晴天保证；行前核对逐日预报及风雨、航班和轮渡通知。</li></ul>
+<p><strong>富国岛</strong></p>
+<ul><li>越南国家旅游局目的地页：支持雨季 5–10 月、旱季 11 月至次年 4 月及海岛旅游信息；不能据此判断某一天晴雨。</li><li>https://vietnam.travel/places-to-go/mekong-delta/phu-quoc</li><li>越南国家旅游局问答页：支持富国岛免签政策的公开说明，具体入境路线和中转手续仍应与承运航司及入境机关确认。</li><li>https://vietnam.travel/faqs</li><li>Novotel Phu Quoc Resort 官方酒店页：支持酒店与度假设施存在；不支持本次库存、套餐和价格。</li><li>https://www.novotelphuquoc.com/</li><li>Best Western Premier Sonasea Phu Quoc 酒店入口：询价候选，具体设施与房型待最新产品资料核验。</li><li>https://www.sonasea.com/</li></ul>
+<p><strong>富国岛航程线索</strong></p>
+<ul><li>天巡首都机场至富国岛路线页：本轮查到中转路线线索，仅用于询价，不代表覆盖所有北京机场或证明候选日期没有直飞，也不支持 20 人指定班次票价。</li><li>https://www.tianxun.com/routes/pek/pqc/beijing-capital-to-phu-quoc.html</li><li>中国民航网 2023 年 12 月越航报道：支持历史上经河内、胡志明市衔接富国岛的路线说明，不证明 2026 年班期与转机可行性。</li><li>http://www.caacnews.com.cn/1/88/202312/t20231227_1373436.html</li></ul>
+<p><strong>普吉岛</strong></p>
+<ul><li>天巡北京至普吉路线页：支持北京直飞路线与约 6 小时飞行时间的公开线索，具体日期、票价与团体座位需航司复核。</li><li>https://www.tianxun.com/routes/bjsa/hkt/beijing-to-phuket.html</li><li>Centara Karon Resort Phuket 官方酒店页：支持酒店名称、地址和泳池等设施，不支持本次房态、双床库存与价格。</li><li>https://www.centarahotelsresorts.com/centara/ckr</li><li>Katathani Phuket Beach Resort 官方酒店页：支持 Kata Noi 位置、客房和度假设施，不支持本次房态、双床库存与价格。</li><li>https://www.katathani.com/</li><li>泰国移民局 TDAC 官方入口：用于行前核对电子入境卡要求，本轮未提取到动态页面正文；填写时限、适用人群和资料以官方页面当时要求为准。</li><li>https://tdac.immigration.go.th/</li><li>本轮未取得普吉官方季节正文，因此不对三个窗口作晴天或出海成功率比较；采购和活动安排均按可能遇雨设计。</li></ul>
+<p><strong>旅行社资质</strong></p>
+<ul><li>文化和旅游部全国旅游监管服务平台：用于核验签约旅行社名称、许可证与出境旅游业务资质。</li><li>https://mr.mct.gov.cn/</li></ul>
+<p>上述公开入口不代表指定日期有可订库存；候选酒店名称也不代表已获采购价。</p></div></details></section>
+</main>
+</body>
+</html>

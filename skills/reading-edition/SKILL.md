@@ -14,7 +14,7 @@ Source: $ARGUMENTS（完整 md 正文或本地文件路径均可）
 
 产物落源 md 同目录、同名 .html（如 docs/report/x.md → docs/report/x.html），是面向用户的交付物，不使用 runtime 目录。
 
-受众判断与结构规划自己设定；细则按需读 references/ 下与当前上下文匹配的进一步要求，交付前对照 rigor.md 自检修正，一次性交付。
+受众判断与结构规划自己设定；细则按需读 references/ 下与当前上下文匹配的进一步要求，交付前对照 rigor.md 自检修正，一次性交付。需要观察信息层级、留白、导航或响应式处理时可看 references/demos/travel/index.html；示例不是模板，不套用其主题、配色、章节或 tabs，也无需每次查看。
 
 ## 维护约定（仅维护时读取，日常使用本 skill 不加载）
 

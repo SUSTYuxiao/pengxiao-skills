@@ -26,6 +26,14 @@
 
 reader-first 的前置研究结论（问题定义、证据来源与强度、候选发现、方案决策、失效条件）见 [notes/reader-first-research.md](notes/reader-first-research.md)；其评估产物在 `temp/reader-first/`（临时目录，不入分发）。
 
+## Demos
+
+| 示例 | 说明 |
+|---|---|
+| [reading-edition/references/demos/travel](skills/reading-edition/references/demos/travel/index.html) | 团队秋季出行的三个静态阅读版（C / F / G），用于观察信息层级、留白、导航与响应式处理；不是模板或规范来源 |
+
+示例是静态展示，不是实时报价或可下单页面；它位于 `reading-edition` skill 内，会随 `pskills sync` 一起拷贝。
+
 ## 引入模式
 
 只有 light 拷贝一种模式（无 subtree 反哺）：
