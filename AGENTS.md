@@ -28,6 +28,16 @@ pengxiao-skills/
 
 `notes/` 与 `temp/` 是仓库内研究与评估区，不是分发产物；`pskills` 只识别并分发 `skills/`。调查依据保存在 notes，长期验收标准随 skill 分发，可重建的试验结果放 temp。
 
+## 文档归属
+
+本仓沿用现有轻量文档分层，不套用根级 `docs/`、`spec/`、`notes/` 三目录接入模板。文档归属按知识的适用范围自动判断，不要求用户先指定存放位置：
+
+- 跨 skill 的协作约定、安装与分发机制、仓库级定位，以及多个 skill 共用的事实或证据，放入根 `README.md`、`AGENTS.md` 或根 `notes/` 中已有的权威位置。
+- 只影响单个 skill 的当前行为、契约、设计取舍与调查证据，放入该 skill 的 `SKILL.md` 或已有的 `docs/`、`references/`、`notes/`。
+- 同一知识只保留一处权威全文，其他入口用短链接指回；不因存放位置不同而两边重复。
+- 归属有疑问时，先看实际复用范围和依赖关系，能据此判断就自主决定；只有证据确实冲突时才升级确认。
+- 沿用现有布局，没有实际知识就不新建目录或空索引；可重建的试验产物放 `temp/`，不进入分发。`references/demos/` 是参考与质量底线，不是规范来源或固定模板。
+
 ## 目标运行环境
 
 - **宿主布局**：`pskills sync` 把 skill 拷贝到业务项目 `.pengxiao-skills/`（只含 `skills/` 与 `.version`），并把选定 skill 软链到 agent 目录的 `skills/<skill>`（指向 `../../.pengxiao-skills/skills/<skill>`）。项目根有 `.agents/` 时只链它（Qoder 与 Codex 同读），否则链已存在的 `.qoder/` 与 `.claude/`，都不存在兜底 `.qoder/`
