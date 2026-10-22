@@ -13,7 +13,11 @@
 
 以下标记块可直接并入作用域 `AGENTS.md`（默认入口、无 lesson 版本）。接入已有布局时，把 `spec/index.md`、`docs/index.md`、`notes/index.md` 三处链接动态替换为实际已有入口的相对路径（例如 `spec/SPEC.md`），不新建第二入口；没有 lesson 载体时整行删除。
 
-<!-- docs-notes:begin v0.4.1（本块由 pengxiao-skills 的 docs-notes skill 维护，勿把项目自有指令写进块内） -->
+### 平铺模式短模板（默认，适用于已有项目）
+
+以下标记块可直接并入作用域 `AGENTS.md`（默认入口、无 lesson 版本）：
+
+<!-- docs-notes:begin v0.5.0（本块由 pengxiao-skills 的 docs-notes skill 维护，勿把项目自有指令写进块内） -->
 
 ## 文档与调查笔记（docs-notes）
 
@@ -28,6 +32,24 @@
 
 - 默认入口是 `docs/index.md`、`spec/index.md`、`notes/index.md`；已有其他入口路径时在原位沿用，并同步写入 `DOCS_NOTES.md` 文末"本项目布局"。
 - 第三条是可选的 lesson 深读引导：存在 lesson 载体时才保留，把链接换成真实相对链接或章节锚点（如 `LESSONS.md`、`docs/standards.md#lessons`）；不存在时整行删除，不留悬空链接。
+
+
+### 统一目录模式短模板（推荐新项目）
+
+统一目录模式下使用以下模板（路径相对 `doc-note/`）：
+
+<!-- docs-notes:begin v0.5.0（本块由 pengxiao-skills 的 docs-notes skill 维护，勿把项目自有指令写进块内） -->
+
+## 文档与调查笔记（docs-notes）
+
+- 本目录范围遵循 [DOCS_NOTES.md](doc-note/DOCS_NOTES.md)：固定 `doc-note/docs/`、`doc-note/spec/`、`doc-note/notes/` 三个必备目录并纳入 Git，lessons 按需。
+- 开工按任务读入口：[spec](doc-note/spec/index.md) 用于代码、配置、行为变更前必读的契约；[docs](doc-note/docs/index.md) 用于现状、架构、操作、边界；[notes](doc-note/notes/index.md) 用于证据、根因与既有结论。
+- 改动前按本次操作匹配 [防错经验](doc-note/LESSONS.md)。
+- 维护与收尾：事实改 `doc-note/docs/`，契约改 `doc-note/spec/`，证据与根因进 `doc-note/notes/`，触发 → 动作经验按需进 lessons；新增 / 移动 / 删除文档同步入口，收尾核验链接与失效条件；只读任务不写，写入受任务授权约束。
+
+<!-- docs-notes:end -->
+
+可选替换项同平铺模式，只需在路径前加 `doc-note/` 前缀。
 - 接入其他 skill 或明确自维护目标时，使用同一模板但删除 `docs-notes:begin/end` 两行；`DOCS_NOTES.md` 同时删除 `docs-notes:spec:begin/end`、顶部托管说明、版本与分发源指针。两份文件均无托管标记，随后由目标 Git 单通道维护；`SKILL.md` 维护节只写"文档与调查约定见本 skill 作用域 `AGENTS.md`"。
 
 ## 3. 合并与升级规则

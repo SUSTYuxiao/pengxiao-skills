@@ -1,11 +1,29 @@
 ---
 name: docs-notes
 description: 项目知识规范接入与整理：把自包含的 docs（当前事实）/ spec（可验证契约）/ notes（证据与根因）/ lessons（按需）规范接入普通项目、指定子目录或其他 skill，并支持更新已接入副本、显式整理（含必要的既有布局迁移）与维护本 skill 自身。目标项目日常写作只依赖其自带的 DOCS_NOTES.md 与 AGENTS.md，不回读本 skill。当用户要求接入或更新文档规范、显式整理文档与调查笔记、迁移已有 docs/spec/ADR 布局，或维护 docs-notes skill 本身时触发。
-version: 0.4.2
+version: 0.5.0
 group: engineering
 ---
 
 # docs-notes：项目知识规范接入与整理
+
+## skill 自身结构
+
+```
+skills/docs-notes/
+├── SKILL.md              # 入口与路由
+├── references/           # 分发模板：接入目标时复制的规范文件
+│   ├── DOCS_NOTES.md    # 核心规范（自包含）
+│   ├── agents-reference.md  # AGENTS.md 路由片段模板
+│   ├── docs.md / spec.md / notes.md / lessons.md  # 四份写作参考
+│   └── maintenance.md   # 整理流程
+└── .skill-meta/         # skill 自身维护目录
+    └── notes/           # 设计笔记与根因
+```
+
+- `references/` 的文件会复制到目标项目，接入后目标不回读本 skill。
+- `.skill-meta/` 是本 skill 的内部维护笔记，不分发到目标项目。
+
 
 本 skill 是**接入器与整理维护入口**，不承载目标项目的日常规范。接入时把自包含的 `references/DOCS_NOTES.md` 复制到目标作用域，并按 `references/agents-reference.md` 写入简短路由片段。目标项目日常写作只依赖自己的 `DOCS_NOTES.md` 与 `AGENTS.md`，不回读本 skill，也不依赖四份写作参考运行。
 
